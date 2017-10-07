@@ -54,7 +54,7 @@ def cameraSetup():
     """Returns a camera object with pre-defined settings."""
 
     # Settings
-    size = 5
+    size = 8
     frameRate = 40
     awbFilename = 'awb_gains.txt'
 
@@ -80,8 +80,7 @@ def cameraSetup():
 
 def crop(img):
     """Returns a cropped image to pre-defined shape."""
-    #return img[18:200, 40:260]
-    return img[0:,40:]
+    return img[75:275, 125:425]
 
 def rmBg(img):
     """Returns the image with the green background removed."""
