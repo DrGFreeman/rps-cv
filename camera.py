@@ -1,5 +1,5 @@
 # camera.py
-# Source: https://github.com/DrGFreeman/RPSCV
+# Source: https://github.com/DrGFreeman/rps-cv
 #
 # MIT License
 #
