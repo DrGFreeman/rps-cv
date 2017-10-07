@@ -1,0 +1,7 @@
+*.pyc
+__pycache__
+awb_gains*
+*.pkl
+*.csv
+*.ipynb
+*.png
