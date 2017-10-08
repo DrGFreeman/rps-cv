@@ -55,7 +55,7 @@ try:
     f = open(filename, 'rb')
     clf = pickle.load(f)
     f.close()
-    
+
     # Create camera object with pre-defined settings
     cam = rps.cameraSetup()
 
@@ -86,7 +86,7 @@ try:
         img = rps.crop(img)
 
         # Get grayscale image
-        gray = imp.getGray(img, threshold=.06)
+        gray = imp.getGray(img)
 
         # Count non-background pixels
         nz = np.count_nonzero(gray)
@@ -98,11 +98,11 @@ try:
         gesture = None
         notify = False
 
-        if  8000 < nz and nz < 30000:
+        if  8000 < nz and nz < 25000:
 
             # Predict gesture
             predGesture = clf.predict([gray])[0]
-        
+
             #print(rps.gestureTxt[predGesture])
 
             if predGesture == lastGesture:
@@ -130,7 +130,7 @@ try:
                     print('Tie')
                 print('Score: player {}, computer {}\n'.format(playerScore,
                                                              computerScore))
-                
+
             lastGesture = predGesture
 
         else:
