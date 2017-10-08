@@ -103,40 +103,6 @@ class Camera():
         print('AWB gains set to:', gRed, gBlue)
         print('AWB gains written to ' + awbFilename)
 
-    def doWhiteBalance2(self, awbFilename='awb_gains.txt', mode='auto'):
-        """A method that performs white balance calibration, sets the PiCamera
-        awb_gains to fixed values and write these values in a file. For best
-        results, put a white objet in the camera field of view (a sheet of paper
-        ) during the calibration process."""
-        ##  Set AWB mode for calibration
-        self.picam.awb_mode = mode
-        print('Calibrating white balance gains...')
-        time.sleep(3)
-        ##  Read AWB gains
-        gRed = 0
-        gBlue = 0
-        nbReadings = 30
-        for i in range(nbReadings):
-            img = self.getOpenCVImage()
-            gBlue += img[:,:,1].mean() / img[:,:,0].mean()
-            gRed += img[:,:,1].mean() / img[:,:,2].mean()
-            time.sleep(.01)
-        gains = gRed / nbReadings, gBlue / nbReadings
-        ##  Set AWB mode to off (manual)
-        self.picam.awb_mode = 'off'
-        ##  Set AWB gains to remain constant
-        self.picam.awb_gains = gains
-
-        ##  Write AWB gains to file
-        gRed = float(gains[0])
-        gBlue = float(gains[1])
-        f = open(awbFilename, 'w')
-        f.flush()
-        f.write(str(gRed) + ', ' + str(gBlue))
-        f.close()
-        print('AWB gains set to:', gRed, gBlue)
-        print('AWB gains written to ' + awbFilename)
-
     def addFrameRateText(self, img, pos=(0, 25), bgr=(0,255,0), samples=21):
         """Returns an image with the frame rate added as text on the image
         passed as argument. The framerate is calculated based on the time
