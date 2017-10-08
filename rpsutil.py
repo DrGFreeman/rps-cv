@@ -32,7 +32,7 @@ import time
 import numpy as np
 import cv2
 
-import camera
+#import camera
 
 # Define possible gestures as constants
 ROCK = 1
@@ -43,14 +43,15 @@ SCISSORS = 3
 gestureTxt = {ROCK: 'rock', PAPER: 'paper', SCISSORS: 'scissors'}
 
 # Define paths to raw image folders
-imgPathsRaw = {ROCK: './img/raw/rock/', PAPER: './img/raw/paper/',
-            SCISSORS: './img/raw/scissors/'}
+imgPathsRaw = {ROCK: './img/rock/', PAPER: './img/paper/',
+            SCISSORS: './img/scissors/'}
 
 # Define HSV values for green background mask
 bgLow = np.array([35, 5, 5])
 bgHigh = np.array([90, 255, 255])
 
 def cameraSetup():
+    import camera
     """Returns a camera object with pre-defined settings."""
 
     # Settings

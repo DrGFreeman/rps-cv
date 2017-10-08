@@ -30,9 +30,6 @@ import numpy as np
 
 # Settings:
 
-# Images input .csv filename prefix
-csvFilename = 'gray'
-
 # Classifier output .pkl filename
 pklFilename = 'clf.pkl'
 

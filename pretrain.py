@@ -28,8 +28,8 @@
 
 from rpsimgproc import *
 
-savePath = '~/data/commun/dev/python/skimage/'
-savePrefix = 'gray'
+#savePath = '~/data/commun/dev/python/skimage/'
+savePath = './'
+savePrefix = 'imgdata'
 
 generateGrayFeatures2(savePath + savePrefix)
-
