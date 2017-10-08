@@ -46,10 +46,6 @@ gestureTxt = {ROCK: 'rock', PAPER: 'paper', SCISSORS: 'scissors'}
 imgPathsRaw = {ROCK: './img/rock/', PAPER: './img/paper/',
             SCISSORS: './img/scissors/'}
 
-# Define HSV values for green background mask
-bgLow = np.array([35, 5, 5])
-bgHigh = np.array([90, 255, 255])
-
 def cameraSetup():
     import camera
     """Returns a camera object with pre-defined settings."""

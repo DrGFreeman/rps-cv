@@ -26,10 +26,10 @@
 # This script reads and processes training images and saves the data in .csv
 # files to be used to train the image classifier.
 
-from rpsimgproc import *
+import rpsimgproc as imp
 
-#savePath = '~/data/commun/dev/python/skimage/'
+# Define path and file prefix for resulting .csv files
 savePath = './'
 savePrefix = 'imgdata'
 
-generateGrayFeatures2(savePath + savePrefix)
+imp.generateGrayFeatures(savePath + savePrefix)
