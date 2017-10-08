@@ -1,3 +1,30 @@
+# rpsimgproc.py
+# Source: https://github.com/DrGFreeman/rps-cv
+#
+# MIT License
+#
+# Copyright (c) 2017 Julien de la Bruere-Terreault <drgfreeman@tuta.io>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+# This file defines functions for processing of images.
+
 import os
 from glob import glob
 import time
@@ -12,12 +39,15 @@ from skimage import filters
 
 import rpsutil as rps
 
-def generateGrayFeatures(filename='gray.csv', binary=False):
-    """Reads image files, generates features from grayscale image and saves the
-    features and labels in a csv file."""
+def generateGrayFeatures(filename='gray.csv', imshape=(200,300), binary=False):
+    """Reads training image files, generates features from grayscale image and
+    saves the features and labels in a csv file to be used to train the image
+    classifier."""
+
+    imsize = imshape[0] * imshape[1]
 
     t0 = time.time()
-    
+
     gestures = [rps.ROCK, rps.PAPER, rps.SCISSORS]
 
     # Create a list of image files for each gesture
@@ -30,7 +60,67 @@ def generateGrayFeatures(filename='gray.csv', binary=False):
     nbImages = sum([len(i) for i in files])
 
     # Create empty numpy arays for features and labels
-    features = np.empty((nbImages, 240*280), dtype=np.float)
+    features = np.empty((nbImages, imsize), dtype=np.float)
+    labels = np.empty((nbImages, 2), dtype=np.object)
+
+    # Generate grayscale image
+    counter = 0
+    for i, gesture in enumerate(gestures):
+        for imageFile in files[i]:
+
+            print('Processing image {}'.format(imageFile))
+
+            # Load image as a numpy array
+            img = imread(imageFile)
+
+            # Generate image features
+            #features[counter] = getGray(img, threshold=.06, binary=binary)
+            features[counter] = getGray(img, threshold=0, binary=binary)
+            labels[counter, 0] = gesture
+            labels[counter, 1] = imageFile
+
+            counter += 1
+
+    dt = round(time.time() - t0, 2)
+    print('Completed processing {} images in {}s'.format(counter, dt))
+    t0 = time.time()
+
+    # Generate pandas dataframe with labels and features
+    dfLabels = pd.DataFrame(labels, columns=['label', 'path'])
+    dfFeatures = pd.DataFrame(features, columns=['f' + str(i) for i in range(imsize)])
+    df = dfLabels.join(dfFeatures)
+    print(df.info())
+
+    # Store dataframe as csv file
+    print('Saving data to {}'.format(filename))
+    df.to_csv(filename)
+
+    dt = round(time.time() - t0, 2)
+    print('File {} saved in {}s'.format(filename, dt))
+    t0 = time.time()
+
+def generateGrayFeatures2(filename='gray', imshape=(200,300), binary=False):
+    """Reads training image files, generates features from grayscale image and
+    saves the features and labels in a csv file to be used to train the image
+    classifier."""
+
+    imsize = imshape[0] * imshape[1]
+
+    t0 = time.time()
+
+    gestures = [rps.ROCK, rps.PAPER, rps.SCISSORS]
+
+    # Create a list of image files for each gesture
+    files = []
+    for i, gesture in enumerate(gestures):
+        path = os.path.join(rps.imgPathsRaw[gesture], '*.png')
+        files.append(glob(path))
+        files[i].sort(key=str.lower)
+
+    nbImages = sum([len(i) for i in files])
+
+    # Create empty numpy arays for features and labels
+    features = np.empty((nbImages, imsize), dtype=np.float)
     labels = np.empty((nbImages, 2), dtype=np.object)
 
     # Generate grayscale image
@@ -56,27 +146,36 @@ def generateGrayFeatures(filename='gray.csv', binary=False):
 
     # Generate pandas dataframe with labels and features
     dfLabels = pd.DataFrame(labels, columns=['label', 'path'])
-    dfFeatures = pd.DataFrame(features, columns=['f' + str(i) for i in range(240*280)])
+    dfFeatures = pd.DataFrame(features, columns=['f' + str(i) for i in range(imsize)])
     df = dfLabels.join(dfFeatures)
-    
-    # Store dataframe as csv file
-    print('Saving data to {}'.format(filename))
-    df.to_csv(filename)
-##    f = open(filename, 'wb')
-##    f.flush()
-##    pickle.dump(df, f)
-##    f.close() 
-    
-    dt = round(time.time() - t0, 2)
-    print('File {} saved in {}s'.format(filename, dt))
-    t0 = time.time()
+    df.info()
+
+    nbRows = df.shape[0]
+    rowsPerFile = 100
+    nbFiles = nbRows // rowsPerFile
+    if nbRows % rowsPerFile != 0:
+        nbFiles += 1
+
+    print('Number of .csv files: {}'.format(nbFiles))
+
+    for i in range(nbFiles):
+        startRow = i * rowsPerFile
+        if i == nbFiles - 1:
+            endRow = df.shape[0]
+        else:
+            endRow = startRow + rowsPerFile
+        dfSave = df.loc[(df.index >= startRow) & (df.index < endRow)]
+        saveName = filename + '.' + str(i) + '.csv'
+        print('Saving rows {} to {} to {}'.format(startRow, endRow - 1, saveName))
+        dfSave.to_csv(saveName)
+
 
 def generateHOGFeatures(filename='data.csv', binary=False):
     """Reads image files, generates HOG features and saves the features and
     labels in a csv file."""
 
     t0 = time.time()
-    
+
     gestures = [rps.ROCK, rps.PAPER, rps.SCISSORS]
 
     # Create a list of image files for each gesture
@@ -116,81 +215,84 @@ def generateHOGFeatures(filename='data.csv', binary=False):
     dfLabels = pd.DataFrame(labels, columns=['label', 'path'])
     dfFeatures = pd.DataFrame(features, columns=['f' + str(i) for i in range(8400)])
     df = dfLabels.join(dfFeatures)
-    
+
     # Store dataframe as csv
     print('Saving data to {}'.format(filename))
     df.to_csv(filename)
 
 
-def getGray(img, hueValue=.36, binary=False):
+def getGray(img, hueValue=.36, threshold=0, binary=False):
     """Returns the grayscale of the source image with its background
     removed."""
-    
+
     # Remove background
     if binary:
-        img = removeBackgroundBinary(img, hueValue)
+        img = removeBackgroundBinary(img, hueValue, threshold)
     else:
-        img = removeBackground(img, hueValue)
+        img = removeBackground(img, hueValue, threshold)
         img = color.rgb2gray(img)
-    
+
     return img.ravel()
 
 
 def getHOG(img, hueValue=.36, binary=False, visualise=False):
     """Returns the HOG features of the source image with its background
     removed."""
-    
+
     # Remove background
     if binary:
         img = removeBackgroundBinary(img, hueValue)
     else:
         img = removeBackground(img, hueValue)
         img = color.rgb2gray(img)
-        
+
     # Extract HOG features
     hogFeatures = feature.hog(img, orientations=8, pixels_per_cell=(8, 8),
                                    cells_per_block=(1, 1), transform_sqrt=True,
                                    block_norm='L2-Hys', visualise=visualise)
-    
+
     return hogFeatures
 
 
 def hueDistance(img, hueValue):
     """Returns an image where the pixel values correspond to the distance from
        the hue value of the source image pixels and the hueValue argument."""
-    
+
     # Convert image to HSV colorspace
     hsv = color.rgb2hsv(img)
-    
+
     # Calculate hue distance
     dist = np.abs(hsv[:,:,0] - hueValue)
-    
-    return dist    
+
+    return dist
 
 
-def removeBackground(img, hueValue):
+def removeBackground(img, hueValue, threshold=0):
     """Returns an image with the background removed based on the hueValue
     argument."""
-    
+
     # Get an image corresponding to the hue distance from the background hue
     # value
     dist = hueDistance(img, hueValue)
-    
+
     # Create a copy of the source image to use as masked image
     masked = img.copy()
-    
+
     # Select background pixels using thresholding and set value to zero (black)
-    masked[dist < filters.threshold_mean(dist)] = 0
-    
+    if threshold == 0:
+         masked[dist < filters.threshold_mean(dist)] = 0
+    else:
+        masked[dist < threshold] = 0
+
     return masked
 
-def removeBackgroundBinary(img, hueValue):
+def removeBackgroundBinary(img, hueValue, threshold=0):
     """Returns an binary image with black background and white foreground."""
-    
+
     # Get an image corresponding to the hue distance from the background hue
     # value
     dist = hueDistance(img, hueValue)
-    
+
     # Return a binary image using thresholding to separate background and
     # foreground
     return dist > filters.threshold_mean(dist)

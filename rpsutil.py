@@ -1,4 +1,4 @@
-# rpsconfig.py
+# rpsutil.py
 # Source: https://github.com/DrGFreeman/rps-cv
 #
 # MIT License
@@ -81,12 +81,3 @@ def cameraSetup():
 def crop(img):
     """Returns a cropped image to pre-defined shape."""
     return img[75:275, 125:425]
-
-def rmBg(img):
-    """Returns the image with the green background removed."""
-    # Create hsv image
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    # Create mask
-    mask = 255 - cv2.inRange(hsv, bgLow, bgHigh)
-    # return masked image
-    return cv2.bitwise_and(img, img, mask=mask)

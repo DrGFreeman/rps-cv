@@ -1,4 +1,32 @@
+# play.py
+# Source: https://github.com/DrGFreeman/rps-cv
+#
+# MIT License
+#
+# Copyright (c) 2017 Julien de la Bruere-Terreault <drgfreeman@tuta.io>
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+# This file is the main program to run to play the Rock-Paper-Scissors game.
+
 import time
+import random
 
 import cv2
 import numpy as np
@@ -7,6 +35,19 @@ import rpsutil as rps
 import rpsimgproc as imp
 
 import pickle
+
+def saveImage(img, gesture, notify=False):
+
+    # Define image path and filename
+    folder = rps.imgPathsRaw[gesture]
+    name = rps.gestureTxt[gesture] + '-' + time.strftime('%Y%m%d-%H%M%S')
+    extension = '.png'
+
+    if notify:
+        print('Saving {}'.format(folder + name + extension))
+
+    # Save image
+    cv2.imwrite(folder + name + extension, img)
 
 try:
     # Load classifier from pickle file
@@ -31,7 +72,10 @@ try:
     # Initialize last gesture value
     lastGesture = 0
 
-    # Initialize count of successive similar gestures
+    # Initialize player scores
+    playerScore = 0
+    computerScore = 0
+    endScore = 5
 
     # Main loop
     while not stop:
@@ -42,10 +86,17 @@ try:
         img = rps.crop(img)
 
         # Get grayscale image
-        gray = imp.getGray(img)
+        gray = imp.getGray(img, threshold=.06)
 
         # Count non-background pixels
         nz = np.count_nonzero(gray)
+
+        # Define waiting time for cv2.waitKey()
+        waitTime = 1
+
+        # Parameters for saving new images
+        gesture = None
+        notify = False
 
         if  8000 < nz and nz < 30000:
 
@@ -60,13 +111,29 @@ try:
                 successive = 0
 
             if successive == 3:
-                print('Locked gesture: {}'.format(rps.gestureTxt[predGesture]))
-                time.sleep(3)
+                print('Player: {}'.format(rps.gestureTxt[predGesture]))
+                waitTime=3000
+                gesture = predGesture
 
+                # Computer gesture
+                computerGesture = random.randint(1,3)
+                print('Computer: {}'.format(rps.gestureTxt[computerGesture]))
+
+                diff = computerGesture - predGesture
+                if diff in [-2, 1]:
+                    print('Computer wins!')
+                    computerScore += 1
+                elif diff in [-1, 2]:
+                    print('Player wins!')
+                    playerScore += 1
+                else:
+                    print('Tie')
+                print('Score: player {}, computer {}\n'.format(playerScore,
+                                                             computerScore))
+                
             lastGesture = predGesture
 
         else:
-            #print('BG')
 
             lastGesture = 0
 
@@ -80,10 +147,33 @@ try:
         cv2.imshow('Camera', imgFR)
 
         # Wait for key press
-        key = cv2.waitKey(1)
+        key = cv2.waitKey(waitTime)
         if key in [27, 113]:
             # Escape or "Q" key pressed; Stop.
             stop = True
+        elif key == 114:
+            # R key pressed (Rock)
+            gesture = rps.ROCK
+            notify = True
+        elif key == 112:
+            # P key pressed (Paper)
+            gesture = rps.PAPER
+            notify = True
+        elif key in [115, 99]:
+            # S or C key pressed (Scissors)
+            gesture = rps.SCISSORS
+            notify = True
+
+        if gesture:
+            # Save new image
+            saveImage(img, gesture, notify)
+
+        if playerScore == endScore or computerScore == endScore:
+            stop = True
+            if computerScore > playerScore:
+                print('Game over, computer wins...')
+            else:
+                print('Game over, player wins!!!')
 
 finally:
     f.close()

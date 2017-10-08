@@ -1,6 +1,7 @@
 *.pyc
 __pycache__
 awb_gains*
+*.bak
 *.pkl
 *.csv
 *.ipynb
