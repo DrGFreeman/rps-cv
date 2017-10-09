@@ -85,8 +85,11 @@ try:
         # Crop image
         img = rps.crop(img)
 
+        # Convert image to RGB (from BGR)
+        imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
         # Get grayscale image
-        gray = imp.getGray(img)
+        gray = imp.getGray(imgRGB)
 
         # Count non-background pixels
         nz = np.count_nonzero(gray)
@@ -110,7 +113,7 @@ try:
             else:
                 successive = 0
 
-            if successive == 3:
+            if successive == 2:
                 print('Player: {}'.format(rps.gestureTxt[predGesture]))
                 waitTime=3000
                 gesture = predGesture
