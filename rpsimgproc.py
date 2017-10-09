@@ -112,7 +112,7 @@ def generateGrayFeatures(filename='gray', imshape=(200,300)):
 
 def getGray(img, hueValue=.36, threshold=0):
     """Returns the grayscale of the source image with its background
-    removed."""
+    removed as a 1D feature vector."""
 
     img = removeBackground(img, hueValue, threshold)
     img = color.rgb2gray(img)
