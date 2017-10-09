@@ -30,7 +30,6 @@ import glob
 import time
 
 import numpy as np
-import cv2
 
 #import camera
 
@@ -78,3 +77,7 @@ def cameraSetup():
 def crop(img):
     """Returns a cropped image to pre-defined shape."""
     return img[75:275, 125:425]
+
+def fastRotate(img):
+    """Rotates the image clockwise 90 deg."""
+    return np.transpose(img.copy(), axes=(1, 0, 2))[:,::-1,:]
