@@ -118,7 +118,6 @@ class Camera():
         frString = '{}fps'.format(str(int(round(self.frameRateFilter.getMean(),
                                                 0))))
         # Add text to image
-        #pos = (0, img.shape[0] - 10) # Bottom-left corner
         cv2.putText(img, frString, pos, cv2.FONT_HERSHEY_DUPLEX, 1, bgr)
 
     def getOpenCVImage(self):
