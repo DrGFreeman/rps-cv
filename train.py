@@ -65,53 +65,46 @@ def train():
     from sklearn.model_selection import GridSearchCV
     from sklearn.svm import SVC
 
-    # Create empty dataframe to store image data
-    data = pd.DataFrame()
+    import rpsimgproc as imp
 
-    # Create list of .csv files
-    files = glob(os.path.join('*.csv'))
-    files.sort(key=str.lower)
+    # Generate image data from stored images
+    print('+{}: Generating image data'.format(dt()))
+    data = imp.generateGrayFeatures(verbose=False)
 
-    for filename in files:
-        print('+{}: Loading data from {}'.format(dt(), filename))
-        dataLoad = pd.DataFrame.from_csv(filename)
-        data = data.append(dataLoad, ignore_index=True)
-
-    data.info()
-
+    # Print the number of traning images for each label
     print(data.label.value_counts().sort_index())
 
-    #data = data.sample(frac=1.)
-
+    # Split labels and features into separate dataframes
     print('+{}: Splitting labels and features'.format(dt()))
     labels = data.label
-    features = data.drop(['label', 'path'], axis=1)
+    features = data.drop(['label'], axis=1)
 
+    # Define pipeline parameters
     print('+{}: Defining pipeline'.format(dt()))
-
     steps = [('pca', PCA()), ('clf', SVC(kernel='rbf'))]
     pipe = Pipeline(steps)
 
+    # Define cross-validation parameters
     print('+{}: Defining cross-validation'.format(dt()))
-
     cv = StratifiedKFold(n_splits=n_splits)
 
+    # Define grid-search parameters
     print('+{}: Defining grid search'.format(dt()))
-
     grid_params = dict(pca__n_components=pca__n_components,
                        clf__gamma=clf__gamma,
                        clf__C=clf__C)
     grid = GridSearchCV(pipe, grid_params, scoring=scoring, n_jobs=n_jobs, cv=cv)
 
+    # Fit the classifier
     print('+{}: Fitting classifier'.format(dt()))
-
     grid.fit(features, labels)
 
+    # Print the best score and best parameters from the grid-search
     print(grid.best_score_)
     print(grid.best_params_)
 
+    # Write classifier to a .pkl file
     print('+{}: Writing classifier to {}'.format(dt(), pklFilename))
-
     f = open(pklFilename, 'wb')
     f.flush()
     pickle.dump(grid, f)

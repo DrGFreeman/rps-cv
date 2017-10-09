@@ -39,7 +39,7 @@ from skimage import filters
 
 import rpsutil as rps
 
-def generateGrayFeatures(filename='gray', imshape=(200,300)):
+def generateGrayFeatures(imshape=(200,300), verbose=True):
     """Reads training image files, generates features from grayscale image and
     saves the features and labels in a csv file to be used to train the image
     classifier."""
@@ -61,34 +61,39 @@ def generateGrayFeatures(filename='gray', imshape=(200,300)):
 
     # Create empty numpy arays for features and labels
     features = np.empty((nbImages, imsize), dtype=np.float)
-    labels = np.empty((nbImages, 2), dtype=np.object)
+    labels = np.empty((nbImages), dtype=np.int)
 
-    # Generate grayscale image
+    # Generate grayscale images
     counter = 0
     for i, gesture in enumerate(gestures):
         for imageFile in files[i]:
 
-            print('Processing image {}'.format(imageFile))
+            if verbose:
+                print('Processing image {}'.format(imageFile))
 
             # Load image as a numpy array
             img = imread(imageFile)
 
-            # Generate image features
+            # Generate and store image features in features array
             features[counter] = getGray(img)
-            labels[counter, 0] = gesture
-            labels[counter, 1] = imageFile
+
+            # Store image label in labels array
+            labels[counter] = gesture
 
             counter += 1
 
-    dt = round(time.time() - t0, 2)
-    print('Completed processing {} images in {}s'.format(counter, dt))
-    t0 = time.time()
+    if verbose:
+        print('Completed processing {} images'.format(counter))
 
     # Generate pandas dataframe with labels and features
-    dfLabels = pd.DataFrame(labels, columns=['label', 'path'])
+    dfLabels = pd.DataFrame(labels, columns=['label'])
     dfFeatures = pd.DataFrame(features, columns=['f' + str(i) for i in range(imsize)])
     df = dfLabels.join(dfFeatures)
-    df.info()
+
+    return df
+
+def saveCSV(df, filename='imgdata'):
+    """Saved the dataframe into multiple .csv files."""
 
     nbRows = df.shape[0]
     rowsPerFile = 100

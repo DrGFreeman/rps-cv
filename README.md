@@ -47,15 +47,11 @@ Hardware:
 * `capture.py`  
 This file opens the camera in "capture mode", to capture and label images that will later be used to train the image classifier. The captured images are automatically named and stored in a folder structure.
 
-* `pretrain.py`*  
-This script reads and processes the training images in preparation for training the image classifier. The processed image data is stored in a set of `.csv` files.
-
 * `train.py`*  
-This script reads the processed image data and trains the support vector machine image classifier. The trained classifier is stored in the `clf.pkl` file.
+This script reads and processes the training images in preparation for training the image classifier. The processed image data is then used to train the support vector machine image classifier. The trained classifier is stored in the `clf.pkl` file read by `play.py`.
 
 * `play.py`  
 This file runs the actual Rock-Paper-Scissors game using the camera and the trained image classifier. Images from each play are captured and added to the image bank, creating additional images to train the classifier.
-
 
 * `rpsimgproc.py`  
 This file provides the image processing functions used by the various other Python files.
@@ -66,4 +62,4 @@ This file provides functions and constants used by the various other Python file
 * `camera.py`  
 This file defines the Camera class, a wrapper around the picamera library, with specific methods for the project such as white balance calibration.
 
-\* Note that the due to memory limitations on the Raspberry Pi, the `pretrain.py` and `train.py` may not run properly on the Raspberry Pi with training sets of more than a few hundred images. Consequently, it is recommended to run these on a more powerful computer. This computer must also have Python 3.4+ and the following Python libraries installed: numpy, pandas, scikit-learn and scikit-image (OpenCV is not required).
+\* Note that the due to memory limitations on the Raspberry Pi, the `train.py` script may not run properly on the Raspberry Pi with training sets of more than a few hundred images. Consequently, it is recommended to run these on a more powerful computer. This computer must also have Python 3.4+ and the following Python libraries installed: numpy, pandas, scikit-learn and scikit-image (OpenCV is not required).
