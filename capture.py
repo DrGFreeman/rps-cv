@@ -48,7 +48,7 @@ def saveImage(img, gesture):
     font = cv2.FONT_HERSHEY_DUPLEX
     cv2.putText(imgTxt, rps.gestureTxt[gesture], (10,25), font, 1, (0, 0, 255))
     cv2.imshow('Camera', imgTxt)
-    key = cv2.waitKey(50)
+    key = cv2.waitKey(2000)
     if key not in [110, 120]:
         # Key is not x or n. Save image
         cv2.imwrite(folder + name + extension, img)
@@ -84,8 +84,7 @@ try:
 
         # Add framerate to copy of image
         imgFR = img.copy()
-        #imgFR = rmBg(imgFR)
-        txtPos = (5, img.shape[0] - 10)
+        txtPos = (5, imgFR.shape[0] - 10)
         cam.addFrameRateText(imgFR, txtPos, bgr=(0,0,255))
 
         # Display image
