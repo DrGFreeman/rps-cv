@@ -37,9 +37,9 @@ pklFilename = 'clf.pkl'
 n_splits = 8
 
 # Grid Search parameters
-pca__n_components = [20]
-clf__gamma = np.logspace(-5, -3, 5)
-clf__C = np.logspace(.5, 2, 4)
+pca__n_components = [40]
+clf__gamma = np.logspace(-4, -2, 5)
+clf__C = np.logspace(.5, 2, 5)
 scoring = 'f1_macro'
 n_jobs = 4
 
@@ -94,6 +94,7 @@ def train():
                        clf__gamma=clf__gamma,
                        clf__C=clf__C)
     grid = GridSearchCV(pipe, grid_params, scoring=scoring, n_jobs=n_jobs, cv=cv)
+    print(grid)
 
     # Fit the classifier
     print('+{}: Fitting classifier'.format(dt()))
