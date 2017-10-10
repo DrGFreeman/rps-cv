@@ -65,7 +65,7 @@ try:
     stop = False
 
     # Initialize opencv GUI window (resizeable)
-    cv2.namedWindow('Camera', cv2.WINDOW_NORMAL)
+    cv2.namedWindow('Camera', cv2.WINDOW_AUTOSIZE)
 
     # Print instructions
     print("\nImage capture mode")
@@ -84,7 +84,7 @@ try:
         img = imp.crop(img)
 
         # Add framerate to copy of image
-        imgFR = img.copy()
+        imgFR = imp.fastRotate(img)
         txtPos = (5, imgFR.shape[0] - 10)
         cam.addFrameRateText(imgFR, txtPos, bgr=(0,0,255))
 
