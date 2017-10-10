@@ -63,7 +63,7 @@ try:
     stop = False
 
     # Initialize opencv GUI window (resizeable)
-    cv2.namedWindow('Camera', cv2.WINDOW_NORMAL)
+    cv2.namedWindow('Camera', cv2.WINDOW_AUTOSIZE)
 
     # Print instructions
     print("\nImage recognition mode")
@@ -141,10 +141,9 @@ try:
 
             lastGesture = 0
 
-        # Add framerate to copy of image
-        imgFR = img.copy()
-        #imgFR = rmBg(imgFR)
-        txtPos = (5, img.shape[0] - 10)
+        # Rotate and add framerate to copy of image
+        imgFR = rps.fastRotate(img)
+        txtPos = (5, imgFR.shape[0] - 10)
         cam.addFrameRateText(imgFR, txtPos, bgr=(0,0,255))
 
         # Display image
