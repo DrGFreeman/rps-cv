@@ -89,10 +89,10 @@ try:
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
         # Get grayscale image
-        gray = imp.getGray(imgRGB)
+        gray = imp.getGray(imgRGB, threshold=.1)
 
         # Count non-background pixels
-        nz = np.count_nonzero(gray)
+        nonZero = np.count_nonzero(gray)
 
         # Define waiting time for cv2.waitKey()
         waitTime = 1
@@ -101,7 +101,8 @@ try:
         gesture = None
         notify = False
 
-        if  8000 < nz and nz < 25000:
+        #if  9000 < nz and nz < 25000:
+        if nonZero > 9000:
 
             # Predict gesture
             predGesture = clf.predict([gray])[0]
