@@ -82,8 +82,7 @@ def generateGrayFeatures(imshape=(200,300), verbose=True):
 
             counter += 1
 
-    if verbose:
-        print('Completed processing {} images'.format(counter))
+    print('Completed processing {} images'.format(counter))
 
     # Generate pandas dataframe with labels and features
     dfLabels = pd.DataFrame(labels, columns=['label'])
