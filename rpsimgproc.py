@@ -75,7 +75,7 @@ def generateGrayFeatures(imshape=(200,300), verbose=True):
             img = imread(imageFile)
 
             # Generate and store image features in features array
-            features[counter] = getGray(img)
+            features[counter] = getGray(img, threshold=.1)
 
             # Store image label in labels array
             labels[counter] = gesture
