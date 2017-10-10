@@ -33,6 +33,7 @@ import cv2
 import numpy as np
 
 import rpsutil as rps
+import rpsimgproc as imp
 
 def saveImage(img, gesture):
 
@@ -80,7 +81,7 @@ try:
         img = cam.getOpenCVImage()
 
         # Crop image
-        img = rps.crop(img)
+        img = imp.crop(img)
 
         # Add framerate to copy of image
         imgFR = img.copy()

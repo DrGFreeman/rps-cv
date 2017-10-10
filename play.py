@@ -83,7 +83,7 @@ try:
         img = cam.getOpenCVImage()
 
         # Crop image
-        img = rps.crop(img)
+        img = imp.crop(img)
 
         # Convert image to RGB (from BGR)
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -142,7 +142,7 @@ try:
             lastGesture = 0
 
         # Rotate and add framerate to copy of image
-        imgFR = rps.fastRotate(img)
+        imgFR = imp.fastRotate(img)
         txtPos = (5, imgFR.shape[0] - 10)
         cam.addFrameRateText(imgFR, txtPos, bgr=(0,0,255))
 
