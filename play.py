@@ -24,6 +24,7 @@
 # SOFTWARE.
 
 # This file is the main program to run to play the Rock-Paper-Scissors game.
+# Game output is made through the terminal and OpenCV window (no GUI).
 
 import time
 import random
