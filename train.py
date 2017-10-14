@@ -64,18 +64,17 @@ def train():
     from sklearn.svm import SVC
 
     import rpsimgproc as imp
+    import rpsutil as rps
 
     # Generate image data from stored images
     print('+{}: Generating image data'.format(dt()))
     features, labels = imp.generateGrayFeatures(verbose=False)
 
-    # # Print the number of traning images for each label
-    # print(data.label.value_counts().sort_index())
-    #
-    # # Split labels and features into separate dataframes
-    # print('+{}: Splitting labels and features'.format(dt()))
-    # labels = data.label
-    # features = data.drop(['label'], axis=1)
+    unique, count = np.unique(labels, return_counts=True)
+
+    # Print the number of traning images for each label
+    for i, label in enumerate(unique):
+        print('{}: {} images'.format(rps.gestureTxt[label], count[i]))
 
     # Define pipeline parameters
     print('+{}: Defining pipeline'.format(dt()))
