@@ -1,8 +1,10 @@
-*.pyc
 __pycache__
-awb_gains*
+*.pyc
 *.bak
 *.pkl
 *.csv
 *.ipynb
-*.png
+img/rock/*.png
+img/paper/*.png
+img/scissors/*.png
+awb_gains*
