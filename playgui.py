@@ -1,6 +1,6 @@
 import pickle
 import random
-import sys
+#import sys
 import time
 
 import pygame as pg
@@ -12,8 +12,6 @@ import cv2
 import rpsutil as rps
 import rpsimgproc as imp
 import rpsgui
-
-CAPTION = 'Rock-Paper-Scissors by drgfreeman@tuta.io'
 
 def saveImage(img, gesture, notify=False):
 
@@ -28,10 +26,6 @@ def saveImage(img, gesture, notify=False):
     # Save image
     cv2.imwrite(folder + name + extension, img)
 
-def quit(delay=0):
-    pg.time.wait(delay)
-    pg.quit()
-    sys.exit()
 
 try:
 
@@ -50,27 +44,21 @@ try:
     # Define score at which game ends
     endScore = 5
 
-    # Initialize pygame
-    pg.init()
-    sWidth = 640
-    sHeight = 480
-    surf = pg.display.set_mode((sWidth, sHeight))
-    pg.display.set_caption(CAPTION)
-
     # Initialize GUI
-    gui = rpsgui.RPSGUI(surf)
+    gui = rpsgui.RPSGUI()
 
     # Load static images for computer gestures
     coImgs = {}
-    img = cv2.imread('img/rock/rock-20171009-233418.png', cv2.IMREAD_COLOR)
+    img = cv2.imread('img/gui/rock.png', cv2.IMREAD_COLOR)
     coImgs[rps.ROCK] = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = cv2.imread('img/paper/paper-20170719-165554.png', cv2.IMREAD_COLOR)
+    img = cv2.imread('img/gui/paper.png', cv2.IMREAD_COLOR)
     coImgs[rps.PAPER] = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = cv2.imread('img/scissors/scissors-20171009-234302.png', cv2.IMREAD_COLOR)
+    img = cv2.imread('img/gui/scissors.png',
+                     cv2.IMREAD_COLOR)
     coImgs[rps.SCISSORS] = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     # Load green image
-    greenImg = cv2.imread('img/test/green.png', cv2.IMREAD_COLOR)
+    greenImg = cv2.imread('img/gui/green.png', cv2.IMREAD_COLOR)
     greenImg = cv2.cvtColor(greenImg, cv2.COLOR_BGR2RGB)
 
     while True:
@@ -162,16 +150,15 @@ try:
                 print('Game over, computer wins...')
             else:
                 print('Game over, player wins!!!')
-            quit()
+            gui.quit()
 
         # Check pygame events
         for event in pg.event.get():
             if event.type == pg.locals.QUIT:
-                quit()
+                gui.quit()
 
-    quit()
+    gui.quit()
 
 finally:
     f.close()
-    cv2.destroyAllWindows()
     cam.close()

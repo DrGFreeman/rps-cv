@@ -1,3 +1,4 @@
+import sys
 import numpy as np
 
 import pygame as pg
@@ -7,8 +8,12 @@ import cv2
 
 class RPSGUI():
 
-    def __init__(self, surf):
-        self.surf = surf
+    def __init__(self):
+        pg.init()
+        self.sWidth = 640
+        self.sHeight = 480
+        self.surf = pg.display.set_mode((self.sWidth, self.sHeight))
+        pg.display.set_caption('Rock-Paper-Scissors by drgfreeman@tuta.io')
         self.plScore = 0
         self.coScore = 0
         self.plImg = pg.Surface((200, 300))
@@ -67,6 +72,11 @@ class RPSGUI():
                                  fgcolor=self.BLACK)
         self.scoreFont.render_to(self.surf, (132,65), str(self.coScore),
                                  fgcolor=self.BLACK)
+
+    def quit(self, delay=0):
+        pg.time.wait(delay)
+        pg.quit()
+        sys.exit()
 
     def setCoImg(self, img):
         self.coImg = pg.surfarray.make_surface(img[:,::-1,:])
