@@ -57,8 +57,6 @@ def train():
     from glob import glob
     import pickle
 
-    import pandas as pd
-
     from sklearn.pipeline import Pipeline
     from sklearn.decomposition import PCA
     from sklearn.model_selection import StratifiedKFold
@@ -69,15 +67,15 @@ def train():
 
     # Generate image data from stored images
     print('+{}: Generating image data'.format(dt()))
-    data = imp.generateGrayFeatures(verbose=False)
+    features, labels = imp.generateGrayFeatures(verbose=False)
 
-    # Print the number of traning images for each label
-    print(data.label.value_counts().sort_index())
-
-    # Split labels and features into separate dataframes
-    print('+{}: Splitting labels and features'.format(dt()))
-    labels = data.label
-    features = data.drop(['label'], axis=1)
+    # # Print the number of traning images for each label
+    # print(data.label.value_counts().sort_index())
+    #
+    # # Split labels and features into separate dataframes
+    # print('+{}: Splitting labels and features'.format(dt()))
+    # labels = data.label
+    # features = data.drop(['label'], axis=1)
 
     # Define pipeline parameters
     print('+{}: Defining pipeline'.format(dt()))
@@ -86,7 +84,7 @@ def train():
 
     # Define cross-validation parameters
     print('+{}: Defining cross-validation'.format(dt()))
-    cv = StratifiedKFold(n_splits=n_splits)
+    cv = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=123)
 
     # Define grid-search parameters
     print('+{}: Defining grid search'.format(dt()))

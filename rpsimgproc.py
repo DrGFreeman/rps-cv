@@ -30,7 +30,6 @@ from glob import glob
 import time
 
 import numpy as np
-import pandas as pd
 
 from skimage.io import imread
 from skimage import color
@@ -92,34 +91,7 @@ def generateGrayFeatures(imshape=(200,300), verbose=True):
 
     print('Completed processing {} images'.format(counter))
 
-    # Generate pandas dataframe with labels and features
-    dfLabels = pd.DataFrame(labels, columns=['label'])
-    dfFeatures = pd.DataFrame(features, columns=['f' + str(i) for i in range(imsize)])
-    df = dfLabels.join(dfFeatures)
-
-    return df
-
-def saveCSV(df, filename='imgdata'):
-    """Saved the dataframe into multiple .csv files."""
-
-    nbRows = df.shape[0]
-    rowsPerFile = 100
-    nbFiles = nbRows // rowsPerFile
-    if nbRows % rowsPerFile != 0:
-        nbFiles += 1
-
-    print('Number of .csv files: {}'.format(nbFiles))
-
-    for i in range(nbFiles):
-        startRow = i * rowsPerFile
-        if i == nbFiles - 1:
-            endRow = df.shape[0]
-        else:
-            endRow = startRow + rowsPerFile
-        dfSave = df.loc[(df.index >= startRow) & (df.index < endRow)]
-        saveName = filename + '.' + str(i) + '.csv'
-        print('Saving rows {} to {} to {}'.format(startRow, endRow - 1, saveName))
-        dfSave.to_csv(saveName)
+    return features, labels
 
 
 def getGray(img, hueValue=.36, threshold=0):
