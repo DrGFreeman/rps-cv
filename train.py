@@ -39,7 +39,7 @@ n_splits = 8
 # Grid Search parameters
 pca__n_components = [40]
 clf__gamma = np.logspace(-4, -2, 5)
-clf__C = np.logspace(.5, 2, 5)
+clf__C = np.logspace(0, 2, 5)
 scoring = 'f1_macro'
 n_jobs = 4
 
