@@ -1,6 +1,8 @@
 # rps-cv
 A Rock-Paper-Scissors game using computer vision and machine learning on Raspberry Pi.
 
+By Julien de la Bruère-Terreault (drgfreeman@tuta.io)
+
 ![Screenshot](img/doc/screen1.png)
 
 ## Summary
