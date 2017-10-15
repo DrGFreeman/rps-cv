@@ -24,7 +24,7 @@
 # SOFTWARE.
 
 # This file defines the RPSGUI class and associated methods to manage the game
-# graphical user intreface (GUI).
+# graphical user intrerface (GUI).
 
 import sys
 import numpy as np
