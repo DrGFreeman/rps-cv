@@ -46,15 +46,15 @@ class RPSGUI():
         self.coScore = 0
         self.plImg = pg.Surface((200, 300))
         self.coImg = pg.Surface((200, 300))
-        self.plImgPos = (380, 165)
-        self.coImgPos = (60, 165)
+        self.plImgPos = (380, 160)
+        self.coImgPos = (60, 160)
         self.plZone = pg.Surface((250, 330))
         self.coZone = pg.Surface((250, 330))
-        self.plZonePos = (355, 150)
-        self.coZonePos = (35, 150)
+        self.plZonePos = (355, 145)
+        self.coZonePos = (35, 145)
         self.winner = None
-        self.plcoFont = pg.freetype.SysFont('', 30)
-        self.scoreFont = pg.freetype.SysFont('', 100)
+        # self.titleFont = pg.freetype.SysFont('', 30)
+        # self.scoreFont = pg.freetype.SysFont('', 100)
 
         # colors
         self.WHITE = (255, 255, 255)
@@ -63,15 +63,26 @@ class RPSGUI():
         self.GREEN = (0, 255, 0)
         self.BLUE = (0, 0, 255)
 
+    def blitTextAlignCenter(self, surf, text, pos):
+        tWidth = text[1].width
+        surf.blit(text[0], (pos[0] - tWidth / 2, pos[1]))
+
     def draw(self):
         # Fill surface with background color
         self.surf.fill(self.WHITE)
 
+        # Draw boxes around computer and player areas
+        plVertices = [(325, 3), (634, 3), (634, 476), (325, 476), (325, 3)]
+        pg.draw.polygon(self.surf, self.BLACK, plVertices, 1)
+        coVertices = [(5, 3), (315, 3), (315, 476), (5, 476), (5, 3)]
+        pg.draw.polygon(self.surf, self.BLACK, coVertices, 1)
+
         # Render computer and player text
-        self.plcoFont.render_to(self.surf, (415, 10), 'PLAYER',
-                                 fgcolor=self.BLACK)
-        self.plcoFont.render_to(self.surf, (75, 10), 'COMPUTER',
-                                 fgcolor=self.BLACK)
+        font = pg.freetype.SysFont(None, 30)
+        text = font.render('PLAYER', self.BLACK)
+        self.blitTextAlignCenter(self.surf, text, (480,15))
+        text = font.render('COMPUTER', self.BLACK)
+        self.blitTextAlignCenter(self.surf, text, (160,15))
 
         # Set computer and player zone colors
         if self.winner == 'player':
@@ -96,10 +107,46 @@ class RPSGUI():
         self.surf.blit(self.coImg, self.coImgPos)
 
         # Render computer and player scores
-        self.scoreFont.render_to(self.surf, (452,65), str(self.plScore),
-                                 fgcolor=self.BLACK)
-        self.scoreFont.render_to(self.surf, (132,65), str(self.coScore),
-                                 fgcolor=self.BLACK)
+        font = pg.freetype.SysFont(None, 100)
+        text = font.render(str(self.plScore), self.BLACK)
+        self.blitTextAlignCenter(self.surf, text, (480, 60))
+        text = font.render(str(self.coScore), self.BLACK)
+        self.blitTextAlignCenter(self.surf, text, (160, 60))
+
+    def gameOver(self, delay=3500):
+        # Create surface for Game Over message
+        goZone = pg.Surface((400, 200))
+
+        # Fill surface with background color
+        goZone.fill(self.WHITE)
+
+        # Draw box around surface
+        vertices = [(3, 3), (396, 3), (396, 196), (3, 196), (3, 3)]
+        pg.draw.polygon(goZone, self.BLACK, vertices, 1)
+
+        # Render text on surface
+        font = pg.freetype.SysFont(None, 40)
+        gameOverText = font.render('GAME OVER', self.BLACK)
+        self.blitTextAlignCenter(goZone, gameOverText, (200, 45))
+
+        if self.plScore > self.coScore:
+            winner = 'PLAYER'
+            color = self.GREEN
+        else:
+            winner = 'COMPUTER'
+            color = self.RED
+
+        winnerText = font.render('{} WINS!'.format(winner), color)
+        self.blitTextAlignCenter(goZone, winnerText, (200, 110))
+
+        # Blit goZone to main surface
+        pos = (self.sWidth / 2 - 200, 175)
+        self.surf.blit(goZone, pos)
+
+        pg.display.flip()
+
+        pg.time.wait(delay)
+        self.quit()
 
     def quit(self, delay=0):
         pg.time.wait(delay)

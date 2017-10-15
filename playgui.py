@@ -171,18 +171,18 @@ try:
             # Save new image
             saveImage(img, gesture, notify)
 
+        # Check pygame events
+        for event in pg.event.get():
+            if event.type == pg.locals.QUIT:
+                gui.quit()
+
         # Check if scores reach endScore (end of game)
         if gui.plScore == endScore or gui.coScore == endScore:
             if gui.coScore > gui.plScore:
                 print('Game over, computer wins...')
             else:
                 print('Game over, player wins!!!')
-            gui.quit()
-
-        # Check pygame events
-        for event in pg.event.get():
-            if event.type == pg.locals.QUIT:
-                gui.quit()
+            gui.gameOver()
 
     gui.quit()
 
