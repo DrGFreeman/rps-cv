@@ -58,6 +58,10 @@ This script reads and processes the training images in preparation for training 
 * `playgui.py`  
 This file runs the actual Rock-Paper-Scissors game using the camera and the trained image classifier in a graphical user interface (GUI). Images from each play are captured and added to the image bank, creating additional images to train the classifier.
 
+* `rpsgui.py`  
+This file defines the RPSGUI class and associated methods to manage the game
+ graphical user interface (GUI).
+
 * `rpsimgproc.py`  
 This file provides the image processing functions used by the various other Python files.
 
