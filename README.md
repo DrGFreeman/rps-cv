@@ -3,7 +3,7 @@ A Rock-Paper-Scissors game using computer vision and machine learning on Raspber
 
 By Julien de la Bruère-Terreault (drgfreeman@tuta.io)
 
-![Screenshot](img/doc/screen1.png)
+![Screenshot](img/doc/screen-2-3.png)
 
 ## Summary
 
@@ -77,3 +77,20 @@ This file defines the Camera class, a wrapper around the picamera library, with 
 This file runs the actual Rock-Paper-Scissors game similarly to playgui.py except the game output is done in the terminal and OpenCV window (no GUI).
 
 \* Note that the due to memory limitations on the Raspberry Pi, the `train.py` script may not run properly on the Raspberry Pi with training sets of more than a few hundred images. Consequently, it is recommended to run these on a more powerful computer. This computer must also have Python 3.4+ and the numpy, scikit-learn and scikit-image Python libraries installed (OpenCV is not required).
+
+## Screenshots
+
+Initial screen:  
+![Initial screen](img/doc/screen-0-0.png)
+
+Computer wins the play:  
+![Computer wins play](img/doc/screen-1-0)
+
+Player wins the play:  
+![Player wins play](img/doc/screen-2-3.png)
+
+Tie:  
+![Tie](img/doc/screen-4-4-tie.png)
+
+Game over, player wins the game:  
+![Game over - player wins](img/doc/screen-3-5-game-over.png)
