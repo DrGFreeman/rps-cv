@@ -1,5 +1,7 @@
 # rps-cv
-A Rock-Paper-Scissors game using computer vision and machine learning on Raspberry PI
+A Rock-Paper-Scissors game using computer vision and machine learning on Raspberry Pi.
+
+![Screenshot](img/doc/screen1.png)
 
 ## Summary
 
@@ -9,7 +11,7 @@ This project results from a challenge my son gave me when I was teaching him the
 
 *"Could you make a Rock-Paper-Scissors game that uses the camera to detect hand gestures?"*
 
-I accepted the challenge and about a year, and a lot of learning, later, I completed the challenge with a functional game.
+I accepted the challenge and about a year and a lot of learning later, I completed the challenge with a functional game.
 
 ### Overview of the game
 
@@ -31,9 +33,9 @@ The project depends on and has been tested with the following libraries:
 Python libraries:
 
 * Numpy 1.13.0
-* Pandas 0.20.2
 * Scikit-Learn 0.18.2
 * Scikit-Image 0.13.0
+* Pygame 1.9.3
 * Picamera
 * [DrGFreeman/PyTools](https://github.com/DrGFreeman/PyTools)
 
@@ -41,6 +43,9 @@ Hardware:
 
 * [Raspberry Pi 3 Model B computer](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/)
 * [Raspberry Pi Camera Module V2](https://www.raspberrypi.org/products/camera-module-v2/)
+* A physical setup for the camera to ensure consistent lighting and camera position:
+
+![Camera & lighting setup](img/doc/hardware1.png)
 
 ## Project files
 
@@ -50,8 +55,8 @@ This file opens the camera in "capture mode", to capture and label images that w
 * `train.py`*  
 This script reads and processes the training images in preparation for training the image classifier. The processed image data is then used to train the support vector machine image classifier. The trained classifier is stored in the `clf.pkl` file read by `play.py`.
 
-* `play.py`  
-This file runs the actual Rock-Paper-Scissors game using the camera and the trained image classifier. Images from each play are captured and added to the image bank, creating additional images to train the classifier.
+* `playgui.py`  
+This file runs the actual Rock-Paper-Scissors game using the camera and the trained image classifier in a graphical user interface (GUI). Images from each play are captured and added to the image bank, creating additional images to train the classifier.
 
 * `rpsimgproc.py`  
 This file provides the image processing functions used by the various other Python files.
@@ -62,4 +67,7 @@ This file provides functions and constants used by the various other Python file
 * `camera.py`  
 This file defines the Camera class, a wrapper around the picamera library, with specific methods for the project such as white balance calibration.
 
-\* Note that the due to memory limitations on the Raspberry Pi, the `train.py` script may not run properly on the Raspberry Pi with training sets of more than a few hundred images. Consequently, it is recommended to run these on a more powerful computer. This computer must also have Python 3.4+ and the following Python libraries installed: numpy, pandas, scikit-learn and scikit-image (OpenCV is not required).
+* `play.py`  
+This file runs the actual Rock-Paper-Scissors game similarly to playgui.py except the game output is done in the terminal and OpenCV window (no GUI).
+
+\* Note that the due to memory limitations on the Raspberry Pi, the `train.py` script may not run properly on the Raspberry Pi with training sets of more than a few hundred images. Consequently, it is recommended to run these on a more powerful computer. This computer must also have Python 3.4+ and the numpy, scikit-learn and scikit-image Python libraries installed (OpenCV is not required).
