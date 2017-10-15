@@ -84,7 +84,7 @@ Initial screen:
 ![Initial screen](img/doc/screen-0-0.png)
 
 Computer wins the play:  
-![Computer wins play](img/doc/screen-1-0)
+![Computer wins play](img/doc/screen-1-0.png)
 
 Player wins the play:  
 ![Player wins play](img/doc/screen-2-3.png)
