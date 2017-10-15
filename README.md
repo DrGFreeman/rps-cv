@@ -80,6 +80,8 @@ This file runs the actual Rock-Paper-Scissors game similarly to playgui.py excep
 
 ## Screenshots
 
+### Play mode with Graphical User Interface (`playgui.py`)
+
 Initial screen:  
 ![Initial screen](img/doc/screen-0-0.png)
 
@@ -94,3 +96,9 @@ Tie:
 
 Game over, player wins the game:  
 ![Game over - player wins](img/doc/screen-3-5-game-over.png)
+
+### Image capture mode (`capture.py`)
+![Capture mode](img/doc/screen-capture.py.png)
+
+### Play mode without GUI (`play.py`)
+![Play no GUI](img/doc/screen-play.py.png)
