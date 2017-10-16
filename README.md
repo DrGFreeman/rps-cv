@@ -27,25 +27,23 @@ The image classifier uses a [Support Vector Machine](https://en.wikipedia.org/wi
 
 The project depends on and has been tested with the following libraries:
 
-* Python 3.4+
 * OpenCV 3.3.0 with bindings for Python 3*
-
-\* Follow [this guide](https://www.pyimagesearch.com/2016/04/18/install-guide-raspberry-pi-3-raspbian-jessie-opencv-3/) for installation of OpenCV on the Raspberry Pi
-
-Python libraries:
-
+* Python 3.4+
 * Numpy 1.13.0
 * Scikit-Learn 0.18.2
 * Scikit-Image 0.13.0
 * Pygame 1.9.3
 * Picamera
-* [DrGFreeman/PyTools](https://github.com/DrGFreeman/PyTools)
+* [DrGFreeman/PyTools](https://github.com/DrGFreeman/PyTools) (timer and filter modules)
 
-Hardware:
+\* Follow [this guide](https://www.pyimagesearch.com/2016/04/18/install-guide-raspberry-pi-3-raspbian-jessie-opencv-3/) for installation of OpenCV on the Raspberry Pi. Install Python libraries within the same virtual environment as OpenCV using the `pip install <package_name>` command. Picamera is installed by default on [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) images.
+
+### Hardware:
 
 * [Raspberry Pi 3 Model B computer](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/)
 * [Raspberry Pi Camera Module V2](https://www.raspberrypi.org/products/camera-module-v2/)
 * A physical setup for the camera to ensure consistent lighting and camera position:
+* A green background to allow background subtraction in the captured images.
 
 ![Camera & lighting setup](img/doc/hardware1.png)
 
