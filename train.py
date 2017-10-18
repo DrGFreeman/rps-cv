@@ -53,8 +53,6 @@ def train():
 
     print('+{}: Importing libraries'.format(dt()))
 
-    import os
-    from glob import glob
     import pickle
 
     from sklearn.pipeline import Pipeline
@@ -103,10 +101,9 @@ def train():
 
     # Write classifier to a .pkl file
     print('+{}: Writing classifier to {}'.format(dt(), pklFilename))
-    f = open(pklFilename, 'wb')
-    f.flush()
-    pickle.dump(grid, f)
-    f.close()
+    with open(pklFilename, 'wb') as f:
+        f.flush()
+        pickle.dump(grid, f)
 
     print('+{}: Done!'.format(dt()))
 

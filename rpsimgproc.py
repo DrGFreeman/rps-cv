@@ -38,6 +38,8 @@ from skimage import filters
 
 import rpsutil as rps
 
+import cv2
+
 def crop(img):
     """Returns a cropped image to pre-defined shape."""
     return img[75:275, 125:425]
@@ -82,7 +84,7 @@ def generateGrayFeatures(imshape=(200,300), verbose=True):
             img = imread(imageFile)
 
             # Generate and store image features in features array
-            features[counter] = getGray(img, threshold=.1)
+            features[counter] = getGray(img, threshold=17)
 
             # Store image label in labels array
             labels[counter] = gesture
@@ -94,12 +96,13 @@ def generateGrayFeatures(imshape=(200,300), verbose=True):
     return features, labels
 
 
-def getGray(img, hueValue=.36, threshold=0):
+def getGray(img, hueValue=63, threshold=0):
     """Returns the grayscale of the source image with its background
     removed as a 1D feature vector."""
 
     img = removeBackground(img, hueValue, threshold)
-    img = color.rgb2gray(img)
+
+    img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY).astype(float) / 255
 
     return img.ravel()
 
@@ -109,10 +112,19 @@ def hueDistance(img, hueValue):
        the hue value of the source image pixels and the hueValue argument."""
 
     # Convert image to HSV colorspace
-    hsv = color.rgb2hsv(img)
+    hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+
+    hChannel = hsv[:,:,0].astype(int)
 
     # Calculate hue distance
     dist = np.abs(hsv[:,:,0] - hueValue)
+    if hueValue < 90:
+        hueOffset = 180
+    else:
+        hueOffset = -180
+
+    dist = np.minimum(np.abs(hChannel - hueValue),
+                      np.abs(hChannel - (hueValue + hueOffset)))
 
     return dist
 

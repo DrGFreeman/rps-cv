@@ -53,9 +53,8 @@ def saveImage(img, gesture, notify=False):
 try:
     # Load classifier from pickle file
     filename = 'clf.pkl'
-    f = open(filename, 'rb')
-    clf = pickle.load(f)
-    f.close()
+    with open(filename, 'rb') as f:
+        clf = pickle.load(f)
 
     # Create camera object with pre-defined settings
     cam = rps.cameraSetup()
@@ -90,7 +89,7 @@ try:
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
         # Get grayscale image
-        gray = imp.getGray(imgRGB, threshold=.1)
+        gray = imp.getGray(imgRGB, threshold=17)
 
         # Count non-background pixels
         nonZero = np.count_nonzero(gray)
