@@ -28,6 +28,7 @@
 
 import pickle
 import random
+import sys
 import time
 
 import pygame as pg
@@ -53,138 +54,154 @@ def saveImage(img, gesture, notify=False):
     # Save image
     cv2.imwrite(folder + name + extension, img)
 
+if __name__ == '__main__':
 
-try:
+    try:
+        # Initialize game mode variables
+        privacy = False
+        loop = False
 
-    # Load classifier from pickle file
-    filename = 'clf.pkl'
-    with open(filename, 'rb') as f:
-        clf = pickle.load(f)
+        # Read command line arguments
+        argv = sys.argv
+        argv.pop(0)
 
-    # Create camera object with pre-defined settings
-    cam = rps.cameraSetup()
-
-    # Initialize last gesture value
-    lastGesture = 0
-
-    # Define score at which game ends
-    endScore = 5
-
-    # Initialize GUI
-    gui = rpsgui.RPSGUI()
-
-    # Load static images for computer gestures
-    coImgs = {}
-    img = cv2.imread('img/gui/rock.png', cv2.IMREAD_COLOR)
-    coImgs[rps.ROCK] = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = cv2.imread('img/gui/paper.png', cv2.IMREAD_COLOR)
-    coImgs[rps.PAPER] = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = cv2.imread('img/gui/scissors.png',
-                     cv2.IMREAD_COLOR)
-    coImgs[rps.SCISSORS] = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
-    # Load green image
-    greenImg = cv2.imread('img/gui/green.png', cv2.IMREAD_COLOR)
-    greenImg = cv2.cvtColor(greenImg, cv2.COLOR_BGR2RGB)
-
-    while True:
-
-        # Get image from camera
-        img = imp.crop(cam.getOpenCVImage())
-
-        # Convert image to RGB (from BGR)
-        imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
-        # Set player image to imgRGB
-        gui.setPlImg(imgRGB)
-
-        # Get grayscale image
-        gray = imp.getGray(imgRGB, threshold=17)
-
-        # Count non-background pixels
-        nonZero = np.count_nonzero(gray)
-
-        # Define waiting time
-        waitTime = 0
-
-        # Parameters for saving new images
-        gesture = None
-        notify = False
-
-        # Check if player hand is present
-        if nonZero > 9000:
-
-            # Predict gesture
-            predGesture = clf.predict([gray])[0]
-
-            if predGesture == lastGesture:
-                successive += 1
-            else:
-                successive = 0
-
-            if successive == 2:
-                print('Player: {}'.format(rps.gestureTxt[predGesture]))
-                waitTime = 3000
-                gesture = predGesture
-
-                # Computer gesture
-                computerGesture = random.randint(1,3)
-                print('Computer: {}'.format(rps.gestureTxt[computerGesture]))
-
-                # Set computer image to computer gesture
-                gui.setCoImg(coImgs[computerGesture])
-
-                diff = computerGesture - predGesture
-                if diff in [-2, 1]:
-                    print('Computer wins!')
-                    gui.setWinner('computer')
-                elif diff in [-1, 2]:
-                    print('Player wins!')
-                    gui.setWinner('player')
+        if len(sys.argv) > 0:
+            for arg in argv:
+                if arg == 'privacy':
+                    privacy = True
+                elif arg == 'loop':
+                    loop = True
                 else:
-                    print('Tie')
-                    gui.setWinner('tie')
-                print('Score: player {}, computer {}\n'.format(gui.plScore,
-                                                             gui.coScore))
+                    print('{} is not a recognized argument'.format(arg))
 
-            lastGesture = predGesture
+        # Load classifier from pickle file
+        filename = 'clf.pkl'
+        with open(filename, 'rb') as f:
+            clf = pickle.load(f)
 
-        else:
+        # Create camera object with pre-defined settings
+        cam = rps.cameraSetup()
 
-            lastGesture = 0
+        # Initialize last gesture value
+        lastGesture = 0
 
-            # Set computer image to green
-            gui.setCoImg(greenImg)
-            gui.setWinner()
+        # Define score at which game ends
+        endScore = 5
 
-        # Draw GUI
-        gui.draw()
+        # Initialize GUI
+        gui = rpsgui.RPSGUI(privacy=privacy, loop=loop)
 
-        # Flip pygame display
-        pg.display.flip()
+        # Load static images for computer gestures
+        coImgs = {}
+        img = cv2.imread('img/gui/rock.png', cv2.IMREAD_COLOR)
+        coImgs[rps.ROCK] = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = cv2.imread('img/gui/paper.png', cv2.IMREAD_COLOR)
+        coImgs[rps.PAPER] = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = cv2.imread('img/gui/scissors.png',
+                         cv2.IMREAD_COLOR)
+        coImgs[rps.SCISSORS] = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-        # Wait
-        pg.time.wait(waitTime)
+        # Load green image
+        greenImg = cv2.imread('img/gui/green.png', cv2.IMREAD_COLOR)
+        greenImg = cv2.cvtColor(greenImg, cv2.COLOR_BGR2RGB)
 
-        if gesture:
-            # Save new image
-            saveImage(img, gesture, notify)
+        while True:
 
-        # Check pygame events
-        for event in pg.event.get():
-            if event.type == pg.locals.QUIT:
-                gui.quit()
+            # Get image from camera
+            img = imp.crop(cam.getOpenCVImage())
 
-        # Check if scores reach endScore (end of game)
-        if gui.plScore == endScore or gui.coScore == endScore:
-            if gui.coScore > gui.plScore:
-                print('Game over, computer wins...')
+            # Convert image to RGB (from BGR)
+            imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+            # Set player image to imgRGB
+            gui.setPlImg(imgRGB)
+
+            # Get grayscale image
+            gray = imp.getGray(imgRGB, threshold=17)
+
+            # Count non-background pixels
+            nonZero = np.count_nonzero(gray)
+
+            # Define waiting time
+            waitTime = 0
+
+            # Parameters for saving new images
+            gesture = None
+            notify = False
+
+            # Check if player hand is present
+            if nonZero > 9000:
+
+                # Predict gesture
+                predGesture = clf.predict([gray])[0]
+
+                if predGesture == lastGesture:
+                    successive += 1
+                else:
+                    successive = 0
+
+                if successive == 2:
+                    print('Player: {}'.format(rps.gestureTxt[predGesture]))
+                    waitTime = 3000
+                    gesture = predGesture
+
+                    # Computer gesture
+                    computerGesture = random.randint(1,3)
+                    print('Computer: {}'.format(rps.gestureTxt[computerGesture]))
+
+                    # Set computer image to computer gesture
+                    gui.setCoImg(coImgs[computerGesture])
+
+                    diff = computerGesture - predGesture
+                    if diff in [-2, 1]:
+                        print('Computer wins!')
+                        gui.setWinner('computer')
+                    elif diff in [-1, 2]:
+                        print('Player wins!')
+                        gui.setWinner('player')
+                    else:
+                        print('Tie')
+                        gui.setWinner('tie')
+                    print('Score: player {}, computer {}\n'.format(gui.plScore,
+                                                                 gui.coScore))
+
+                lastGesture = predGesture
+
             else:
-                print('Game over, player wins!!!')
-            gui.gameOver()
 
-    gui.quit()
+                lastGesture = 0
 
-finally:
-    f.close()
-    cam.close()
+                # Set computer image to green
+                gui.setCoImg(greenImg)
+                gui.setWinner()
+
+            # Draw GUI
+            gui.draw()
+
+            # Flip pygame display
+            pg.display.flip()
+
+            # Wait
+            pg.time.wait(waitTime)
+
+            if gesture:
+                # Save new image
+                saveImage(img, gesture, notify)
+
+            # Check pygame events
+            for event in pg.event.get():
+                if event.type == pg.locals.QUIT:
+                    gui.quit()
+
+            # Check if scores reach endScore (end of game)
+            if gui.plScore == endScore or gui.coScore == endScore:
+                if gui.coScore > gui.plScore:
+                    print('Game over, computer wins...\n')
+                else:
+                    print('Game over, player wins!!!\n')
+                gui.gameOver()
+
+
+    finally:
+        f.close()
+        cam.close()

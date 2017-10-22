@@ -36,8 +36,10 @@ import cv2
 
 class RPSGUI():
 
-    def __init__(self):
+    def __init__(self, privacy=False, loop=False):
         pg.init()
+        self.privacy = privacy
+        self.loop = loop
         self.sWidth = 640
         self.sHeight = 480
         self.surf = pg.display.set_mode((self.sWidth, self.sHeight))
@@ -53,8 +55,6 @@ class RPSGUI():
         self.plZonePos = (355, 145)
         self.coZonePos = (35, 145)
         self.winner = None
-        # self.titleFont = pg.freetype.SysFont('', 30)
-        # self.scoreFont = pg.freetype.SysFont('', 100)
 
         # colors
         self.WHITE = (255, 255, 255)
@@ -62,6 +62,8 @@ class RPSGUI():
         self.RED = (255, 0, 0)
         self.GREEN = (0, 255, 0)
         self.BLUE = (0, 0, 255)
+
+        self.showPrivacyNote()
 
     def blitTextAlignCenter(self, surf, text, pos):
         tWidth = text[1].width
@@ -146,12 +148,45 @@ class RPSGUI():
         pg.display.flip()
 
         pg.time.wait(delay)
-        self.quit()
+
+        if self.loop:
+            self.reset()
+        else:
+            self.quit()
+
+    def showPrivacyNote(self, delay=10000):
+        if self.privacy:
+            # Fill surface with background color
+            self.surf.fill(self.WHITE)
+
+            #Render text on surface
+            font = pg.freetype.SysFont(None, 40)
+            text = font.render('Privacy Notice', self.RED)
+            pos = (self.sWidth / 2, 100)
+            self.blitTextAlignCenter(self.surf, text, pos)
+
+            font = pg.freetype.SysFont(None, 20)
+            pn = ['Images captured during the game are stored to help']
+            pn.append('improve the image classification algorithm and may be')
+            pn.append('shared publicly. By playing this game you agree to have')
+            pn.append('image of your hand captured and stored.')
+            for i, line in enumerate(pn):
+                text = font.render(line, self.BLACK)
+                pos = (self.sWidth / 2, 150 + 25 * i)
+                self.blitTextAlignCenter(self.surf, text, pos)
+
+            pg.display.flip()
+            pg.time.wait(delay)
 
     def quit(self, delay=0):
         pg.time.wait(delay)
         pg.quit()
         sys.exit()
+
+    def reset(self):
+        self.plScore = 0
+        self.coScore = 0
+        self.showPrivacyNote()
 
     def setCoImg(self, img):
         self.coImg = pg.surfarray.make_surface(img[:,::-1,:])
