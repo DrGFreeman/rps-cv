@@ -55,6 +55,10 @@ def saveImage(img, gesture, notify=False):
     cv2.imwrite(folder + name + extension, img)
 
 if __name__ == '__main__':
+    """Launches the Rock-Paper-Scissors game with a graphical interface
+    Command line arguments:
+        privacy: will display the privacy notice at beginning of game
+        loop: will launch a new game once current game is over."""
 
     try:
         # Initialize game mode variables
