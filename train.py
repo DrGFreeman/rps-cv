@@ -40,7 +40,8 @@ n_splits = 8
 pca__n_components = [40]
 clf__gamma = np.logspace(-4, -2, 5)
 clf__C = np.logspace(0, 2, 5)
-scoring = 'f1_macro'
+#scoring = 'f1_macro'
+scoring = 'f1_micro'
 n_jobs = 4
 
 
