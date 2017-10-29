@@ -169,7 +169,7 @@ class RPSGUI():
             pn = ['Images captured during the game are stored to help']
             pn.append('improve the image classification algorithm and may be')
             pn.append('shared publicly. By playing this game you agree to have')
-            pn.append('image of your hand captured and stored.')
+            pn.append('images of your hand captured and stored.')
             for i, line in enumerate(pn):
                 text = font.render(line, self.BLACK)
                 pos = (self.sWidth / 2, 150 + 25 * i)
