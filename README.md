@@ -42,8 +42,9 @@ The project depends on and has been tested with the following libraries:
 
 * [Raspberry Pi 3 Model B computer](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/)
 * [Raspberry Pi Camera Module V2](https://www.raspberrypi.org/products/camera-module-v2/)
-* A physical setup for the camera to ensure consistent lighting and camera position:
 * A green background to allow background subtraction in the captured images.
+* A physical setup for the camera to ensure consistent lighting and camera position. The 3D models I used are available [on Thingiverse](https://www.thingiverse.com/thing:2598378).
+
 
 ![Camera & lighting setup](img/doc/hardware1.png)
 
