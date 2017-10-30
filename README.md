@@ -23,6 +23,11 @@ The pictures taken by the camera are processed and fed to an image classifier th
 
 The image classifier uses a [Support Vector Machine](https://en.wikipedia.org/wiki/Support_vector_machine), a class of [machine learning](https://en.wikipedia.org/wiki/Machine_learning) algorithm. The image classifier has been priorly "trained" with a bank of labeled images corresponding to the "Rock", "Paper", "Scissors" gestures captured with the Raspberry Pi camera.
 
+### How it works
+
+The image below shows the processing pipeline for the training of the image classifier (top portion) and the prediction of gesture for new images captured by the camera during the game (bottom portion).
+![Rock-Paper-Scissors computer vision & machine learning pipeline](img/doc/rps-pipeline.png)
+
 ## Dependencies
 
 The project depends on and has been tested with the following libraries:
