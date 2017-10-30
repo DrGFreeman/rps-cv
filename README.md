@@ -25,7 +25,7 @@ The image classifier uses a [Support Vector Machine](https://en.wikipedia.org/wi
 
 ### How it works
 
-The image below shows the processing pipeline for the training of the image classifier (top portion) and the prediction of gesture for new images captured by the camera during the game (bottom portion).
+The image below shows the processing pipeline for the training of the image classifier (top portion) and the prediction of gesture for new images captured by the camera during the game (bottom portion). Click [here](https://raw.githubusercontent.com/DrGFreeman/rps-cv/master/img/doc/rps-pipeline.png) for full size image.
 ![Rock-Paper-Scissors computer vision & machine learning pipeline](img/doc/rps-pipeline.png)
 
 ## Dependencies
