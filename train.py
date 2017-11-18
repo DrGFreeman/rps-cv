@@ -30,6 +30,9 @@ import numpy as np
 
 # Settings:
 
+# Random State
+rs = 42
+
 # Classifier output .pkl filename
 pklFilename = 'clf.pkl'
 
@@ -37,10 +40,12 @@ pklFilename = 'clf.pkl'
 n_splits = 8
 
 # Grid Search parameters
-pca__n_components = [40]
-clf__gamma = np.logspace(-4, -2, 5)
-clf__C = np.logspace(0, 2, 5)
-#scoring = 'f1_macro'
+pca__n_components = [60]
+#pca__n_components = [40, 60, 80]
+clf__gamma = np.logspace(-4, -3, 3)
+#clf__gamma = np.logspace(-4, -2, 5)
+clf__C = np.logspace(0, 1, 3)
+#clf__C = np.logspace(0, 2, 5)
 scoring = 'f1_micro'
 n_jobs = 4
 
@@ -58,9 +63,13 @@ def train():
 
     from sklearn.pipeline import Pipeline
     from sklearn.decomposition import PCA
+    from sklearn.model_selection import StratifiedShuffleSplit
     from sklearn.model_selection import StratifiedKFold
     from sklearn.model_selection import GridSearchCV
     from sklearn.svm import SVC
+    from sklearn.metrics import f1_score
+    from sklearn.metrics import confusion_matrix
+    from sklearn.metrics import classification_report
 
     import rpsimgproc as imp
     import rpsutil as rps
@@ -73,7 +82,16 @@ def train():
 
     # Print the number of traning images for each label
     for i, label in enumerate(unique):
-        print('{}: {} images'.format(rps.gestureTxt[label], count[i]))
+        print('  {}: {} images'.format(rps.gestureTxt[label], count[i]))
+
+    # Generate test set
+    print('+{}: Generating test set'.format(dt()))
+    sssplit = StratifiedShuffleSplit(n_splits=1, test_size=.15, random_state=rs)
+    for train_index, test_index in sssplit.split(features, labels):
+        features_train = features[train_index]
+        features_test = features[test_index]
+        labels_train = labels[train_index]
+        labels_test = labels[test_index]
 
     # Define pipeline parameters
     print('+{}: Defining pipeline'.format(dt()))
@@ -82,7 +100,7 @@ def train():
 
     # Define cross-validation parameters
     print('+{}: Defining cross-validation'.format(dt()))
-    cv = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=123)
+    cv = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=rs)
 
     # Define grid-search parameters
     print('+{}: Defining grid search'.format(dt()))
@@ -90,15 +108,29 @@ def train():
                        clf__gamma=clf__gamma,
                        clf__C=clf__C)
     grid = GridSearchCV(pipe, grid_params, scoring=scoring, n_jobs=n_jobs, cv=cv)
+    print('Grid search parameters:')
     print(grid)
 
     # Fit the classifier
     print('+{}: Fitting classifier'.format(dt()))
-    grid.fit(features, labels)
+    grid.fit(features_train, labels_train)
 
     # Print the best score and best parameters from the grid-search
-    print(grid.best_score_)
-    print(grid.best_params_)
+    print('Grid search best score: {}'.format(grid.best_score_))
+    print('Grid search best parameters:')
+    for key, value in grid.best_params_.items():
+        print('  {}: {}'.format(key, value))
+
+    # Validate classifier on test set
+    print('+{}: Validating classifier on test set'.format(dt()))
+    pred = grid.predict(features_test)
+    score = f1_score(labels_test, pred, average='micro')
+    print('Classifier f1-score on test set: {}'.format(score))
+    print('Confusion matrix:')
+    print(confusion_matrix(labels_test, pred))
+    print('Classification report:')
+    tn = [rps.gestureTxt[i] for i in range(1, 4)]
+    print(classification_report(labels_test, pred, target_names=tn))
 
     # Write classifier to a .pkl file
     print('+{}: Writing classifier to {}'.format(dt(), pklFilename))
