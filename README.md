@@ -82,7 +82,61 @@ This file runs the actual Rock-Paper-Scissors game similarly to playgui.py excep
 
 \* Note that the due to memory limitations on the Raspberry Pi, the `train.py` script may not run properly on the Raspberry Pi with training sets of more than a few hundred images. Consequently, it is recommended to run these on a more powerful computer. This computer must also have OpenCV, Python 3.4+ and the numpy, scikit-learn and scikit-image Python libraries installed.
 
-## Screenshots
+## Ouput & Screenshots
+
+### Training mode
+
+Typical output from `train.py` (on Windows PC with Intel Core I7-6700 @3.4GHz, 16GB RAM):
+```
+(C:\ProgramData\Anaconda3) P:\git\rps-cv>python train.py
++0.0: Importing libraries
++22.2: Generating image data
+Completed processing 1637 images
+  rock: 537 images
+  paper: 547 images
+  scissors: 553 images
++196.02: Generating test set
++196.31: Defining pipeline
++196.31: Defining cross-validation
++196.31: Defining grid search
+Grid search parameters:
+GridSearchCV(cv=StratifiedKFold(n_splits=8, random_state=42, shuffle=True),
+       error_score='raise',
+       estimator=Pipeline(steps=[('pca', PCA(copy=True, iterated_power='auto',
+       n_components=None, random_state=None, svd_solver='auto', tol=0.0,
+       whiten=False)), ('clf', SVC(C=1.0, cache_size=200, class_weight=None,
+       coef0=0.0, decision_function_shape=None, degree=3, gamma='auto',
+       kernel='rbf', max_iter=-1, probability=False, random_state=None,
+       shrinking=True, tol=0.001, verbose=False))]),
+       fit_params={}, iid=True, n_jobs=4, param_grid={'pca__n_components': [60],
+       'clf__gamma': array([ 0.0001 ,  0.00032,  0.001  ]),
+       'clf__C': array([  1.     ,   3.16228,  10.     ])},
+       pre_dispatch='2*n_jobs', refit=True, return_train_score=True,
+       scoring='f1_micro', verbose=0)
++196.31: Fitting classifier
+Grid search best score: 0.9884974838245866
+Grid search best parameters:
+  clf__C: 3.1622776601683795
+  clf__gamma: 0.00031622776601683794
+  pca__n_components: 60
++394.53: Validating classifier on test set
+Classifier f1-score on test set: 0.991869918699187
+Confusion matrix:
+[[81  0  0]
+ [ 1 81  0]
+ [ 1  0 82]]
+Classification report:
+             precision    recall  f1-score   support
+
+       rock       0.98      1.00      0.99        81
+      paper       1.00      0.99      0.99        82
+   scissors       1.00      0.99      0.99        83
+
+avg / total       0.99      0.99      0.99       246
+
++394.63: Writing classifier to clf.pkl
++405.1: Done!
+```
 
 ### Play mode with Graphical User Interface (`playgui.py`)
 
