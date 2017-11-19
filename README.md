@@ -3,7 +3,8 @@ A Rock-Paper-Scissors game using computer vision and machine learning on Raspber
 
 By Julien de la Bruère-Terreault (drgfreeman@tuta.io)
 
-![Screenshot](img/doc/screen-2-3.png)
+[![Animated screenshot](img/doc/rps.gif)](https://www.youtube.com/watch?v=ozo0-lx_PMA)  
+Click on image to access [video on youtube](https://www.youtube.com/watch?v=ozo0-lx_PMA).
 
 ## Summary
 
