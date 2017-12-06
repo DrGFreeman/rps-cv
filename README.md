@@ -103,13 +103,15 @@ Completed processing 1708 images
 Grid search parameters:
 GridSearchCV(cv=StratifiedKFold(n_splits=5, random_state=42, shuffle=True),
        error_score='raise',
-       estimator=Pipeline(steps=[('pca', PCA(copy=True, iterated_power='auto', n_components=None, random_state=None,
-  svd_solver='auto', tol=0.0, whiten=False)), ('clf', SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
-  decision_function_shape=None, degree=3, gamma='auto', kernel='rbf',
-  max_iter=-1, probability=False, random_state=None, shrinking=True,
-  tol=0.001, verbose=False))]),
+       estimator=Pipeline(steps=[('pca', PCA(copy=True, iterated_power='auto', n_components=None,
+       random_state=None, svd_solver='auto', tol=0.0, whiten=False)), ('clf', SVC(C=1.0,
+       cache_size=200, class_weight=None, coef0=0.0, decision_function_shape=None, degree=3,
+       gamma='auto', kernel='rbf', max_iter=-1, probability=False, random_state=None, shrinking=True,
+       tol=0.001, verbose=False))]),
        fit_params={}, iid=True, n_jobs=4,
-       param_grid={'clf__C': array([   1.     ,    3.16228,   10.     ,   31.62278,  100.     ]), 'clf__gamma': array([ 0.0001 ,  0.00032,  0.001  ,  0.00316,  0.01   ]), 'pca__n_components': [60]},
+       param_grid={'clf__C': array([   1.     ,    3.16228,   10.     ,   31.62278,  100.     ]),
+                   'clf__gamma': array([ 0.0001 ,  0.00032,  0.001  ,  0.00316,  0.01   ]),
+                   'pca__n_components': [60]},
        pre_dispatch='2*n_jobs', refit=True, return_train_score=True,
        scoring='f1_micro', verbose=1)
 +99.64: Fitting classifier
