@@ -87,56 +87,57 @@ This file runs the actual Rock-Paper-Scissors game similarly to playgui.py excep
 
 ### Training mode
 
-Typical output from `train.py` (on Windows PC with Intel Core I7-6700 @3.4GHz, 16GB RAM):
+Typical output from `train.py` (on PC with Intel Core I7-6700 @3.4GHz, 16GB RAM, Anaconda distribution):
 ```
-(C:\ProgramData\Anaconda3) P:\git\rps-cv>python train.py
+(rps-cv) jul@rosalind:~/pi/git/rps-cv$ python train.py
 +0.0: Importing libraries
-+22.2: Generating image data
-Completed processing 1637 images
-  rock: 537 images
-  paper: 547 images
-  scissors: 553 images
-+196.02: Generating test set
-+196.31: Defining pipeline
-+196.31: Defining cross-validation
-+196.31: Defining grid search
++3.75: Generating image data
+Completed processing 1708 images
+  rock: 562 images
+  paper: 568 images
+  scissors: 578 images
++99.51: Generating test set
++99.64: Defining pipeline
++99.64: Defining cross-validation
++99.64: Defining grid search
 Grid search parameters:
-GridSearchCV(cv=StratifiedKFold(n_splits=8, random_state=42, shuffle=True),
+GridSearchCV(cv=StratifiedKFold(n_splits=5, random_state=42, shuffle=True),
        error_score='raise',
-       estimator=Pipeline(steps=[('pca', PCA(copy=True, iterated_power='auto',
-       n_components=None, random_state=None, svd_solver='auto', tol=0.0,
-       whiten=False)), ('clf', SVC(C=1.0, cache_size=200, class_weight=None,
-       coef0=0.0, decision_function_shape=None, degree=3, gamma='auto',
-       kernel='rbf', max_iter=-1, probability=False, random_state=None,
-       shrinking=True, tol=0.001, verbose=False))]),
-       fit_params={}, iid=True, n_jobs=4, param_grid={'pca__n_components': [60],
-       'clf__gamma': array([ 0.0001 ,  0.00032,  0.001  ]),
-       'clf__C': array([  1.     ,   3.16228,  10.     ])},
+       estimator=Pipeline(steps=[('pca', PCA(copy=True, iterated_power='auto', n_components=None, random_state=None,
+  svd_solver='auto', tol=0.0, whiten=False)), ('clf', SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
+  decision_function_shape=None, degree=3, gamma='auto', kernel='rbf',
+  max_iter=-1, probability=False, random_state=None, shrinking=True,
+  tol=0.001, verbose=False))]),
+       fit_params={}, iid=True, n_jobs=4,
+       param_grid={'clf__C': array([   1.     ,    3.16228,   10.     ,   31.62278,  100.     ]), 'clf__gamma': array([ 0.0001 ,  0.00032,  0.001  ,  0.00316,  0.01   ]), 'pca__n_components': [60]},
        pre_dispatch='2*n_jobs', refit=True, return_train_score=True,
-       scoring='f1_micro', verbose=0)
-+196.31: Fitting classifier
-Grid search best score: 0.9884974838245866
+       scoring='f1_micro', verbose=1)
++99.64: Fitting classifier
+Fitting 5 folds for each of 25 candidates, totalling 125 fits
+[Parallel(n_jobs=4)]: Done  42 tasks      | elapsed:  2.1min
+[Parallel(n_jobs=4)]: Done 125 out of 125 | elapsed:  5.9min finished
+Grid search best score: 0.9910406616126809
 Grid search best parameters:
-  clf__C: 3.1622776601683795
-  clf__gamma: 0.00031622776601683794
   pca__n_components: 60
-+394.53: Validating classifier on test set
-Classifier f1-score on test set: 0.991869918699187
+  clf__C: 10.0
+  clf__gamma: 0.00031622776601683794
++458.66: Validating classifier on test set
+Classifier f1-score on test set: 0.9922178988326849
 Confusion matrix:
-[[81  0  0]
- [ 1 81  0]
- [ 1  0 82]]
+[[84  1  0]
+ [ 1 84  0]
+ [ 0  0 87]]
 Classification report:
              precision    recall  f1-score   support
 
-       rock       0.98      1.00      0.99        81
-      paper       1.00      0.99      0.99        82
-   scissors       1.00      0.99      0.99        83
+       rock       0.99      0.99      0.99        85
+      paper       0.99      0.99      0.99        85
+   scissors       1.00      1.00      1.00        87
 
-avg / total       0.99      0.99      0.99       246
+avg / total       0.99      0.99      0.99       257
 
-+394.63: Writing classifier to clf.pkl
-+405.1: Done!
++458.72: Writing classifier to clf.pkl
++467.25: Done!
 ```
 
 ### Play mode with Graphical User Interface (`playgui.py`)
