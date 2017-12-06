@@ -26,6 +26,7 @@
 # This script reads the pre-processed image data and trains the image
 # classifier. The trained classifier is stored in a .pkl (pickle) file.
 
+import sys
 import numpy as np
 
 # Settings:
@@ -37,20 +38,20 @@ rs = 42
 pklFilename = 'clf.pkl'
 
 # Stratified KFold cross-validation parameter
-n_splits = 8
+n_splits = 5
 
 # Grid Search parameters
 pca__n_components = [60]
 #pca__n_components = [40, 60, 80]
-clf__gamma = np.logspace(-4, -3, 3)
-#clf__gamma = np.logspace(-4, -2, 5)
-clf__C = np.logspace(0, 1, 3)
-#clf__C = np.logspace(0, 2, 5)
+#clf__gamma = np.logspace(-4, -3, 3)
+clf__gamma = np.logspace(-4, -2, 5)
+#clf__C = np.logspace(0, 1, 3)
+clf__C = np.logspace(0, 2, 5)
 scoring = 'f1_micro'
 n_jobs = 4
 
 
-def train():
+def train(nbImg=0, cvScore=False):
     import time
     t0 = time.time()
 
@@ -76,7 +77,8 @@ def train():
 
     # Generate image data from stored images
     print('+{}: Generating image data'.format(dt()))
-    features, labels = imp.generateGrayFeatures(verbose=False)
+    features, labels = imp.generateGrayFeatures(nbImg=nbImg, verbose=False,
+                                                rs=rs)
 
     unique, count = np.unique(labels, return_counts=True)
 
@@ -107,13 +109,24 @@ def train():
     grid_params = dict(pca__n_components=pca__n_components,
                        clf__gamma=clf__gamma,
                        clf__C=clf__C)
-    grid = GridSearchCV(pipe, grid_params, scoring=scoring, n_jobs=n_jobs, cv=cv)
+    grid = GridSearchCV(pipe, grid_params, scoring=scoring, n_jobs=n_jobs,
+        refit=True, cv=cv, verbose=1)
     print('Grid search parameters:')
     print(grid)
 
     # Fit the classifier
+    t0_train = time.time()
     print('+{}: Fitting classifier'.format(dt()))
     grid.fit(features_train, labels_train)
+    dt_train = time.time() - t0_train
+
+    if cvScore:
+        # Print the results of the grid search cross-validation
+        cvres = grid.cv_results_
+        print('Cross-validation results:')
+        for score, std, params in zip(cvres['mean_test_score'],
+                cvres['std_test_score'], cvres['params']):
+            print('  {}, {}, {}'.format(round(score, 4), round(std, 5), params))
 
     # Print the best score and best parameters from the grid-search
     print('Grid search best score: {}'.format(grid.best_score_))
@@ -140,5 +153,18 @@ def train():
 
     print('+{}: Done!'.format(dt()))
 
+    return grid.best_score_, score, dt_train
+
 if __name__ == '__main__':
-    train()
+
+    # Read command line arguments
+    argv = sys.argv
+
+    cvScore = False
+
+    if len(sys.argv) > 1:
+        for arg in argv[1:]:
+            if arg == 'cvScore':
+                cvScore = True
+
+    train(cvScore)

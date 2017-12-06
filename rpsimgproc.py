@@ -48,7 +48,7 @@ def fastRotate(img):
     """Rotates the image clockwise 90 deg."""
     return np.transpose(img, axes=(1, 0, 2))[:,::-1,:].copy()
 
-def generateGrayFeatures(imshape=(200,300, 3), verbose=True):
+def generateGrayFeatures(imshape=(200,300, 3), nbImg=0, verbose=True, rs=42):
     """Reads training image files, generates features from grayscale image and
     saves the features and labels in a csv file to be used to train the image
     classifier."""
@@ -75,6 +75,13 @@ def generateGrayFeatures(imshape=(200,300, 3), verbose=True):
     # Generate grayscale images
     counter = 0
     for i, gesture in enumerate(gestures):
+
+        if nbImg > 0:
+            np.random.seed = rs
+            files[i] = np.random.permutation(files[i])
+            if len(files[i]) > nbImg:
+                files[i] = files[i][:int(nbImg / 3)]
+
         for imageFile in files[i]:
 
             if verbose:
