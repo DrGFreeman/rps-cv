@@ -48,7 +48,7 @@ clf__gamma = np.logspace(-4, -2, 5)
 #clf__C = np.logspace(0, 1, 3)
 clf__C = np.logspace(0, 2, 5)
 scoring = 'f1_micro'
-n_jobs = 4
+n_jobs = -1
 
 
 def train(nbImg=0, cvScore=False):

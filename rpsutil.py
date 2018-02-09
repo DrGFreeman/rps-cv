@@ -34,9 +34,9 @@ import numpy as np
 #import camera
 
 # Define possible gestures as constants
-ROCK = 1
-PAPER = 2
-SCISSORS = 3
+ROCK = 0
+PAPER = 1
+SCISSORS = 2
 
 # Define text labels corresponding to gestures
 gestureTxt = {ROCK: 'rock', PAPER: 'paper', SCISSORS: 'scissors'}

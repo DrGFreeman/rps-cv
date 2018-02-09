@@ -70,7 +70,7 @@ try:
     print("Press ESC or q to quit\n")
 
     # Initialize last gesture value
-    lastGesture = 0
+    lastGesture = -1
 
     # Initialize player scores
     playerScore = 0
@@ -120,7 +120,7 @@ try:
                 gesture = predGesture
 
                 # Computer gesture
-                computerGesture = random.randint(1,3)
+                computerGesture = random.randint(0,2)
                 print('Computer: {}'.format(rps.gestureTxt[computerGesture]))
 
                 diff = computerGesture - predGesture
@@ -139,7 +139,7 @@ try:
 
         else:
 
-            lastGesture = 0
+            lastGesture = -1
 
         # Rotate and add framerate to copy of image
         imgFR = imp.fastRotate(img)

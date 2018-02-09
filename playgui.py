@@ -87,7 +87,7 @@ if __name__ == '__main__':
         cam = rps.cameraSetup()
 
         # Initialize last gesture value
-        lastGesture = 0
+        lastGesture = -1
 
         # Define score at which game ends
         endScore = 5
@@ -150,7 +150,7 @@ if __name__ == '__main__':
                     gesture = predGesture
 
                     # Computer gesture
-                    computerGesture = random.randint(1,3)
+                    computerGesture = random.randint(0,2)
                     print('Computer: {}'.format(rps.gestureTxt[computerGesture]))
 
                     # Set computer image to computer gesture
@@ -173,7 +173,7 @@ if __name__ == '__main__':
 
             else:
 
-                lastGesture = 0
+                lastGesture = -1
 
                 # Set computer image to green
                 gui.setCoImg(greenImg)
