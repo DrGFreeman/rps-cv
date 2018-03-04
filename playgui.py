@@ -188,7 +188,7 @@ if __name__ == '__main__':
             # Wait
             pg.time.wait(waitTime)
 
-            if gesture:
+            if gesture is not None:
                 # Save new image
                 saveImage(img, gesture, notify)
 

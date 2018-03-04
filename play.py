@@ -167,7 +167,7 @@ try:
             gesture = rps.SCISSORS
             notify = True
 
-        if gesture:
+        if gesture is not None:
             # Save new image
             saveImage(img, gesture, notify)
 
