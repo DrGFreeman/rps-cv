@@ -142,7 +142,7 @@ def train(nbImg=0, cvScore=False):
     print('Confusion matrix:')
     print(confusion_matrix(labels_test, pred))
     print('Classification report:')
-    tn = [rps.gestureTxt[i] for i in range(1, 4)]
+    tn = [rps.gestureTxt[i] for i in range(3)]
     print(classification_report(labels_test, pred, target_names=tn))
 
     # Write classifier to a .pkl file
