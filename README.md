@@ -4,7 +4,9 @@ A Rock-Paper-Scissors game using computer vision and machine learning on Raspber
 By Julien de la Bruère-Terreault (drgfreeman@tuta.io)
 
 [![Animated screenshot](img/doc/rps.gif)](https://www.youtube.com/watch?v=ozo0-lx_PMA)  
-Click on image to access [video on youtube](https://www.youtube.com/watch?v=ozo0-lx_PMA).
+Click on image to access [video on YouTube](https://www.youtube.com/watch?v=ozo0-lx_PMA).
+
+#### This project is [showcased](https://www.raspberrypi.org/magpi-issues/MagPi74.pdf#%5B%7B%22num%22%3A272%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22FitH%22%7D%2C787%5D) in [issue 74 of the MagPi](https://www.raspberrypi.org/magpi/issues/74/), the official Raspberry Pi Foundation magazine.
 
 ## Summary
 
@@ -52,42 +54,44 @@ The project depends on and has been tested with the following libraries:
 * A physical setup for the camera to ensure consistent lighting and camera position. The 3D models I used are available [on Thingiverse](https://www.thingiverse.com/thing:2598378).
 
 
-![Camera & lighting setup](img/doc/hardware1.png)
+![Camera & lighting setup](img/doc/hardware_front.jpg)
+![Camera & lighting setup](img/doc/hardware_rear.jpg)
+![Camera & lighting setup](img/doc/hardware_top.jpg)
 
 ## Project files
 
-* `capture.py`  
+* *capture.py*  
 This file opens the camera in "capture mode", to capture and label images that will later be used to train the image classifier. The captured images are automatically named and stored in a folder structure.
 
-* `train.py`*  
+* *train.py*  
 This script reads and processes the training images in preparation for training the image classifier. The processed image data is then used to train the support vector machine image classifier. The trained classifier is stored in the `clf.pkl` file read by `play.py`.
 
-* `playgui.py`  
+* *playgui.py*  
 This file runs the actual Rock-Paper-Scissors game using the camera and the trained image classifier in a graphical user interface (GUI). Images from each play are captured and added to the image bank, creating additional images to train the classifier.
 
-* `rpsgui.py`  
+* *rpsgui.py*  
 This file defines the RPSGUI class and associated methods to manage the game
  graphical user interface (GUI).
 
-* `rpsimgproc.py`  
+* *rpsimgproc.py*  
 This file provides the image processing functions used by the various other Python files.
 
-* `rpsutil.py`  
+* *rpsutil.py*  
 This file provides functions and constants used by the various other Python files.
 
-* `camera.py`  
+* *camera.py*  
 This file defines the Camera class, a wrapper around the picamera library, with specific methods for the project such as white balance calibration.
 
-* `play.py`  
+* *play.py*  
 This file runs the actual Rock-Paper-Scissors game similarly to playgui.py except the game output is done in the terminal and OpenCV window (no GUI).
 
-\* Note that the due to memory limitations on the Raspberry Pi, the `train.py` script may not run properly on the Raspberry Pi with training sets of more than a few hundred images. Consequently, it is recommended to run these on a more powerful computer. This computer must also have OpenCV, Python 3.4+ and the numpy, scikit-learn and scikit-image Python libraries installed.
+\* Note that the due to memory limitations on the Raspberry Pi, the *train.py* script may not run properly on the Raspberry Pi with training sets of more than a few hundred images. Consequently, it is recommended to run these on a more powerful computer. This computer must also have OpenCV, Python 3.4+ and the numpy, scikit-learn and scikit-image Python libraries installed.
 
 ## Ouput & Screenshots
 
 ### Training mode
 
-Typical output from `train.py` (on PC with Intel Core I7-6700 @3.4GHz, 16GB RAM, Anaconda distribution):
+Typical output from *train.py* (on PC with Intel Core I7-6700 @3.4GHz, 16GB RAM, Anaconda distribution):
 ```
 (rps-cv) jul@rosalind:~/pi/git/rps-cv$ python train.py
 +0.0: Importing libraries
@@ -142,7 +146,7 @@ avg / total       0.99      0.99      0.99       257
 +467.25: Done!
 ```
 
-### Play mode with Graphical User Interface (`playgui.py`)
+### Play mode with Graphical User Interface (*playgui.py*)
 
 Initial screen:  
 ![Initial screen](img/doc/screen-0-0.png)
@@ -159,8 +163,8 @@ Tie:
 Game over, player wins the game:  
 ![Game over - player wins](img/doc/screen-3-5-game-over.png)
 
-### Image capture mode (`capture.py`)
+### Image capture mode (*capture.py*)
 ![Capture mode](img/doc/screen-capture.py.png)
 
-### Play mode without GUI (`play.py`)
+### Play mode without GUI (*play.py*)
 ![Play no GUI](img/doc/screen-play.py.png)
