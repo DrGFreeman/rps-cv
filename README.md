@@ -6,7 +6,7 @@ By Julien de la Bruère-Terreault (drgfreeman@tuta.io)
 [![Animated screenshot](img/doc/rps.gif)](https://www.youtube.com/watch?v=ozo0-lx_PMA)  
 Click on image to access [video on YouTube](https://www.youtube.com/watch?v=ozo0-lx_PMA).
 
-#### This project is [showcased](https://www.raspberrypi.org/magpi-issues/MagPi74.pdf#%5B%7B%22num%22%3A272%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22FitH%22%7D%2C787%5D) in [issue 74 of the MagPi](https://www.raspberrypi.org/magpi/issues/74/), the official Raspberry Pi Foundation magazine.
+#### This project is [showcased](https://www.raspberrypi.org/magpi-issues/MagPi74.pdf#%5B%7B%22num%22%3A272%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22FitH%22%7D%2C787%5D) in [issue 74](https://www.raspberrypi.org/magpi/issues/74/)  of the MagPi, the official magazine of the [Raspberry Pi Foundation](https://www.raspberrypi.org/).
 
 ## Summary
 
