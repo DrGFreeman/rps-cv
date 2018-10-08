@@ -3,6 +3,8 @@ A Rock-Paper-Scissors game using computer vision and machine learning on Raspber
 
 By Julien de la Bruère-Terreault (drgfreeman@tuta.io)
 
+>[README_in_Simplified_Chinese](https://github.com/TommyZihao/MagPi_Chinese/blob/master/MagPi74_18-19%E7%94%A8%E6%A0%91%E8%8E%93%E6%B4%BE%E8%B7%9F%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%8E%A9%E7%8C%9C%E6%8B%B3.md)
+
 [![Animated screenshot](img/doc/rps.gif)](https://www.youtube.com/watch?v=ozo0-lx_PMA)  
 Click on image to access [video on YouTube](https://www.youtube.com/watch?v=ozo0-lx_PMA).
 
