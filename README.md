@@ -3,12 +3,12 @@ A Rock-Paper-Scissors game using computer vision and machine learning on Raspber
 
 By Julien de la Bruère-Terreault (drgfreeman@tuta.io)
 
->[README_in_Simplified_Chinese](https://github.com/TommyZihao/MagPi_Chinese/blob/master/MagPi74_18-19%E7%94%A8%E6%A0%91%E8%8E%93%E6%B4%BE%E8%B7%9F%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%8E%A9%E7%8C%9C%E6%8B%B3.md)
-
 [![Animated screenshot](img/doc/rps.gif)](https://www.youtube.com/watch?v=ozo0-lx_PMA)  
 Click on image to access [video on YouTube](https://www.youtube.com/watch?v=ozo0-lx_PMA).
 
 #### This project is [showcased](https://www.raspberrypi.org/magpi-issues/MagPi74.pdf#%5B%7B%22num%22%3A272%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22FitH%22%7D%2C787%5D) in [issue 74](https://www.raspberrypi.org/magpi/issues/74/)  of the MagPi, the official magazine of the [Raspberry Pi Foundation](https://www.raspberrypi.org/).
+
+[MagPi article in Simplified Chinese](https://github.com/TommyZihao/MagPi_Chinese/blob/master/MagPi74_18-19%E7%94%A8%E6%A0%91%E8%8E%93%E6%B4%BE%E8%B7%9F%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%8E%A9%E7%8C%9C%E6%8B%B3.md) contributed by [Tommy Zihao](https://github.com/TommyZihao)
 
 ## Summary
 
