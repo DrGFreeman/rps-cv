@@ -3,7 +3,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2017 Julien de la Bruere-Terreault <drgfreeman@tuta.io>
+# Copyright (c) 2017-2019 Julien de la Bruere-Terreault <drgfreeman@tuta.io>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -37,28 +37,46 @@ rs = 42
 # Classifier output .pkl filename
 pklFilename = 'clf.pkl'
 
-# Stratified KFold cross-validation parameter
+# Number of folds of Stratified KFold cross-validation
 n_splits = 5
 
 # Grid Search parameters
-pca__n_components = [60]
-#pca__n_components = [40, 60, 80]
-#clf__gamma = np.logspace(-4, -3, 3)
-clf__gamma = np.logspace(-4, -2, 5)
-#clf__C = np.logspace(0, 1, 3)
-clf__C = np.logspace(0, 2, 5)
+pca__n_components = [40] # Number of components of Principal Component Analysis
+clf__gamma = np.logspace(-4, -2, 3) # [.0001, .001, .01]
+clf__C = np.logspace(0, 2, 3) # [1, 10, 100]
 scoring = 'f1_micro'
+
+# The n_jobs parameter controls the number of CPU cores to use in parallel for
+# training the machine learning model. Training with a higher number of cores
+# will result in faster training time but uses more memory.
+#
+# If training on a Raspberry Pi 3B or 3B+, due to the limited available memory,
+# the following values are recommended as function of the total number of images
+# available.
+#
+# Less than ~700 images: n_jobs=1 (training time* ~35 minutes)
+# Less than ~450 images: n_jobs=2 (training time* ~10 minutes)
+# Less than ~350 images: n_jobs=3 (training time* ~7 minutes)
+# Less than ~280 images: n_jobs=4 (-1) (training time* ~5 minutes)
+# * Training times estimates are based on a total of 9 grid-search combinations
+#   performed on a Raspberry Pi 3 model B+.
+#
+# NOTE: Ensure the Raspberry Pi has adequate cooling if running on multiple
+#       CPU cores for extended periods.
+#
+# If training on a PC with 8+Gb of memory, the n_jobs parameter can be set to
+# -1 which will use all available CPU cores. If you run out of memory due to a
+# large number of images, reduce the number of CPU cores by ajusting n_jobs.
 n_jobs = -1
 
-
-def train(nbImg=0, cvScore=False):
+def train(nbImg=0, cvScore=True):
     import time
     t0 = time.time()
 
     def dt():
         return round(time.time() - t0, 2)
 
-    print('+{}: Importing libraries'.format(dt()))
+    print('+{}s: Importing libraries'.format(dt()))
 
     import pickle
 
@@ -72,11 +90,11 @@ def train(nbImg=0, cvScore=False):
     from sklearn.metrics import confusion_matrix
     from sklearn.metrics import classification_report
 
-    import rpsimgproc as imp
-    import rpsutil as rps
+    from rpscv import imgproc as imp
+    from rpscv import utils
 
     # Generate image data from stored images
-    print('+{}: Generating image data'.format(dt()))
+    print('+{}s: Generating image data'.format(dt()))
     features, labels = imp.generateGrayFeatures(nbImg=nbImg, verbose=False,
                                                 rs=rs)
 
@@ -84,10 +102,10 @@ def train(nbImg=0, cvScore=False):
 
     # Print the number of traning images for each label
     for i, label in enumerate(unique):
-        print('  {}: {} images'.format(rps.gestureTxt[label], count[i]))
+        print('  {}: {} images'.format(utils.gestureTxt[label], count[i]))
 
     # Generate test set
-    print('+{}: Generating test set'.format(dt()))
+    print('+{}s: Generating test set'.format(dt()))
     sssplit = StratifiedShuffleSplit(n_splits=1, test_size=.15, random_state=rs)
     for train_index, test_index in sssplit.split(features, labels):
         features_train = features[train_index]
@@ -96,16 +114,16 @@ def train(nbImg=0, cvScore=False):
         labels_test = labels[test_index]
 
     # Define pipeline parameters
-    print('+{}: Defining pipeline'.format(dt()))
+    print('+{}s: Defining pipeline'.format(dt()))
     steps = [('pca', PCA()), ('clf', SVC(kernel='rbf'))]
     pipe = Pipeline(steps)
 
     # Define cross-validation parameters
-    print('+{}: Defining cross-validation'.format(dt()))
+    print('+{}s: Defining cross-validation'.format(dt()))
     cv = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=rs)
 
     # Define grid-search parameters
-    print('+{}: Defining grid search'.format(dt()))
+    print('+{}s: Defining grid search'.format(dt()))
     grid_params = dict(pca__n_components=pca__n_components,
                        clf__gamma=clf__gamma,
                        clf__C=clf__C)
@@ -116,7 +134,7 @@ def train(nbImg=0, cvScore=False):
 
     # Fit the classifier
     t0_train = time.time()
-    print('+{}: Fitting classifier'.format(dt()))
+    print('+{}s: Fitting classifier'.format(dt()))
     grid.fit(features_train, labels_train)
     dt_train = time.time() - t0_train
 
@@ -135,23 +153,23 @@ def train(nbImg=0, cvScore=False):
         print('  {}: {}'.format(key, value))
 
     # Validate classifier on test set
-    print('+{}: Validating classifier on test set'.format(dt()))
+    print('+{}s: Validating classifier on test set'.format(dt()))
     pred = grid.predict(features_test)
     score = f1_score(labels_test, pred, average='micro')
     print('Classifier f1-score on test set: {}'.format(score))
     print('Confusion matrix:')
     print(confusion_matrix(labels_test, pred))
     print('Classification report:')
-    tn = [rps.gestureTxt[i] for i in range(3)]
+    tn = [utils.gestureTxt[i] for i in range(3)]
     print(classification_report(labels_test, pred, target_names=tn))
 
     # Write classifier to a .pkl file
-    print('+{}: Writing classifier to {}'.format(dt(), pklFilename))
+    print('+{}s: Writing classifier to {}'.format(dt(), pklFilename))
     with open(pklFilename, 'wb') as f:
         f.flush()
         pickle.dump(grid, f)
 
-    print('+{}: Done!'.format(dt()))
+    print('+{}s: Done!'.format(dt()))
 
     return grid.best_score_, score, dt_train
 
@@ -160,11 +178,11 @@ if __name__ == '__main__':
     # Read command line arguments
     argv = sys.argv
 
-    cvScore = False
+    cvScore = True
 
     if len(sys.argv) > 1:
         for arg in argv[1:]:
-            if arg == 'cvScore':
-                cvScore = True
+            if arg == '--no-cv-score':
+                cvScore = False
 
-    train(cvScore)
+    train(cvScore=cvScore)
