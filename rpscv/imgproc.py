@@ -3,7 +3,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2017 Julien de la Bruere-Terreault <drgfreeman@tuta.io>
+# Copyright (c) 2017-2019 Julien de la Bruere-Terreault <drgfreeman@tuta.io>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ from skimage import color
 from skimage import feature
 from skimage import filters
 
-import rpsutil as rps
+from rpscv import utils
 
 import cv2
 
@@ -48,7 +48,7 @@ def fastRotate(img):
     """Rotates the image clockwise 90 deg."""
     return np.transpose(img, axes=(1, 0, 2))[:,::-1,:].copy()
 
-def generateGrayFeatures(imshape=(200,300, 3), nbImg=0, verbose=True, rs=42):
+def generateGrayFeatures(imshape=(200,300, 3), nbImg=0, verbose=False, rs=42):
     """Reads training image files, generates features from grayscale image and
     saves the features and labels in a csv file to be used to train the image
     classifier."""
@@ -57,19 +57,19 @@ def generateGrayFeatures(imshape=(200,300, 3), nbImg=0, verbose=True, rs=42):
 
     t0 = time.time()
 
-    gestures = [rps.ROCK, rps.PAPER, rps.SCISSORS]
+    gestures = [utils.ROCK, utils.PAPER, utils.SCISSORS]
 
     # Create a list of image files for each gesture
     files = []
     for i, gesture in enumerate(gestures):
-        path = os.path.join(rps.imgPathsRaw[gesture], '*.png')
+        path = os.path.join(utils.imgPathsRaw[gesture], '*.png')
         files.append(glob(path))
         files[i].sort(key=str.lower)
 
     nbImages = sum([len(i) for i in files])
 
     # Create empty numpy arays for features and labels
-    features = np.empty((nbImages, imsize), dtype=np.float)
+    features = np.empty((nbImages, imsize), dtype=np.float32)
     labels = np.empty((nbImages), dtype=np.int)
 
     # Generate grayscale images
@@ -115,7 +115,7 @@ def getGray(img, hueValue=63, threshold=0):
 
     img = removeBackground(img, hueValue, threshold)
 
-    img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY).astype(float) / 255
+    img = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY).astype(np.float32) / 255
 
     return img.ravel()
 
