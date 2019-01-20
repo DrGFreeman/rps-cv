@@ -3,7 +3,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2017 Julien de la Bruere-Terreault <drgfreeman@tuta.io>
+# Copyright (c) 2017-2019 Julien de la Bruere-Terreault <drgfreeman@tuta.io>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -32,14 +32,14 @@ import time
 import cv2
 import numpy as np
 
-import rpsutil as rps
-import rpsimgproc as imp
+from rpscv import utils
+from rpscv import imgproc as imp
 
 def saveImage(img, gesture):
 
     # Define image path and filename
-    folder = rps.imgPathsRaw[gesture]
-    name = rps.gestureTxt[gesture] + '-' + time.strftime('%Y%m%d-%H%M%S')
+    folder = utils.imgPathsRaw[gesture]
+    name = utils.gestureTxt[gesture] + '-' + time.strftime('%Y%m%d-%H%M%S')
     extension = '.png'
 
     print("Saving " + name + extension + " - Accept ([y]/n)?")
@@ -47,7 +47,7 @@ def saveImage(img, gesture):
     # Write gesture name to image and show for a few seconds
     imgTxt = img.copy()
     font = cv2.FONT_HERSHEY_DUPLEX
-    cv2.putText(imgTxt, rps.gestureTxt[gesture], (10,25), font, 1, (0, 0, 255))
+    cv2.putText(imgTxt, utils.gestureTxt[gesture], (10,25), font, 1, (0, 0, 255))
     cv2.imshow('Camera', imgTxt)
     key = cv2.waitKey(2000)
     if key not in [110, 120]:
@@ -59,7 +59,7 @@ def saveImage(img, gesture):
 
 try:
     # Create camera object with pre-defined settings
-    cam = rps.cameraSetup()
+    cam = utils.cameraSetup()
 
     # Initialize variable to stop while loop execution
     stop = False
@@ -100,14 +100,14 @@ try:
             gesture = None
             if key == 114:
                 # "R" key pressed (Rock)
-                gesture = rps.ROCK
+                gesture = utils.ROCK
             elif key == 112:
                 # "P" key pressed (Paper)
-                gesture = rps.PAPER
+                gesture = utils.PAPER
             elif key in [115, 99]:
                 # "S" or "C" key pressed (Scisors)
-                gesture = rps.SCISSORS
-            if gesture:
+                gesture = utils.SCISSORS
+            if gesture is not None:
                 saveImage(img, gesture)
 
 finally:

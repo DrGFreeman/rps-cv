@@ -3,7 +3,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2017 Julien de la Bruere-Terreault <drgfreeman@tuta.io>
+# Copyright (c) 2017-2019 Julien de la Bruere-Terreault <drgfreeman@tuta.io>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -32,16 +32,16 @@ import random
 import cv2
 import numpy as np
 
-import rpsutil as rps
-import rpsimgproc as imp
+from rpscv import utils
+from rpscv import imgproc as imp
 
 import pickle
 
 def saveImage(img, gesture, notify=False):
 
     # Define image path and filename
-    folder = rps.imgPathsRaw[gesture]
-    name = rps.gestureTxt[gesture] + '-' + time.strftime('%Y%m%d-%H%M%S')
+    folder = utils.imgPathsRaw[gesture]
+    name = utils.gestureTxt[gesture] + '-' + time.strftime('%Y%m%d-%H%M%S')
     extension = '.png'
 
     if notify:
@@ -57,7 +57,7 @@ try:
         clf = pickle.load(f)
 
     # Create camera object with pre-defined settings
-    cam = rps.cameraSetup()
+    cam = utils.cameraSetup()
 
     # Initialize variable to stop while loop execution
     stop = False
@@ -107,21 +107,19 @@ try:
             # Predict gesture
             predGesture = clf.predict([gray])[0]
 
-            #print(rps.gestureTxt[predGesture])
-
             if predGesture == lastGesture:
                 successive += 1
             else:
                 successive = 0
 
             if successive == 2:
-                print('Player: {}'.format(rps.gestureTxt[predGesture]))
+                print('Player: {}'.format(utils.gestureTxt[predGesture]))
                 waitTime=3000
                 gesture = predGesture
 
                 # Computer gesture
                 computerGesture = random.randint(0,2)
-                print('Computer: {}'.format(rps.gestureTxt[computerGesture]))
+                print('Computer: {}'.format(utils.gestureTxt[computerGesture]))
 
                 diff = computerGesture - predGesture
                 if diff in [-2, 1]:
@@ -156,15 +154,15 @@ try:
             stop = True
         elif key == 114:
             # R key pressed (Rock)
-            gesture = rps.ROCK
+            gesture = utils.ROCK
             notify = True
         elif key == 112:
             # P key pressed (Paper)
-            gesture = rps.PAPER
+            gesture = utils.PAPER
             notify = True
         elif key in [115, 99]:
             # S or C key pressed (Scissors)
-            gesture = rps.SCISSORS
+            gesture = utils.SCISSORS
             notify = True
 
         if gesture is not None:

@@ -3,7 +3,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2017 Julien de la Bruere-Terreault <drgfreeman@tuta.io>
+# Copyright (c) 2017-2019 Julien de la Bruere-Terreault <drgfreeman@tuta.io>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -30,10 +30,9 @@ import time
 
 import cv2
 import numpy as np
-from picamera import PiCamera, PiCameraCircularIO
+#from picamera import PiCamera, PiCameraCircularIO
 
-import timer
-import filters
+from rpscv.utils import Filter1D, Timer
 
 class Camera():
 
@@ -41,6 +40,7 @@ class Camera():
         """A wrapper class for the Raspberry Pi camera using the picamera
         python library. The size parameter sets the camera resolution to
         size * (64, 48)."""
+        from picamera import PiCamera, PiCameraCircularIO
         self.active = False
         try:
             if type(size) is not int:
@@ -60,8 +60,8 @@ class Camera():
         self.picam.vflip = vflip
         time.sleep(1)
         self.stream = PiCameraCircularIO(self.picam, seconds=1)
-        self.frameRateTimer = timer.Timer()
-        self.frameRateFilter = filters.Filter1D(maxSize=21)
+        self.frameRateTimer = Timer()
+        self.frameRateFilter = Filter1D(maxSize=21)
         self.start()
 
     def close(self):

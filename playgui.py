@@ -3,7 +3,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2017 Julien de la Bruere-Terreault <drgfreeman@tuta.io>
+# Copyright (c) 2017-2019 Julien de la Bruere-Terreault <drgfreeman@tuta.io>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -37,15 +37,15 @@ import pygame.locals
 import numpy as np
 import cv2
 
-import rpsutil as rps
-import rpsimgproc as imp
-import rpsgui
+from rpscv import utils
+from rpscv import imgproc as imp
+from rpscv.gui import RPSGUI
 
 def saveImage(img, gesture, notify=False):
 
     # Define image path and filename
-    folder = rps.imgPathsRaw[gesture]
-    name = rps.gestureTxt[gesture] + '-' + time.strftime('%Y%m%d-%H%M%S')
+    folder = utils.imgPathsRaw[gesture]
+    name = utils.gestureTxt[gesture] + '-' + time.strftime('%Y%m%d-%H%M%S')
     extension = '.png'
 
     if notify:
@@ -84,7 +84,7 @@ if __name__ == '__main__':
             clf = pickle.load(f)
 
         # Create camera object with pre-defined settings
-        cam = rps.cameraSetup()
+        cam = utils.cameraSetup()
 
         # Initialize last gesture value
         lastGesture = -1
@@ -93,17 +93,17 @@ if __name__ == '__main__':
         endScore = 5
 
         # Initialize GUI
-        gui = rpsgui.RPSGUI(privacy=privacy, loop=loop)
+        gui = RPSGUI(privacy=privacy, loop=loop)
 
         # Load static images for computer gestures
         coImgs = {}
         img = cv2.imread('img/gui/rock.png', cv2.IMREAD_COLOR)
-        coImgs[rps.ROCK] = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        coImgs[utils.ROCK] = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img = cv2.imread('img/gui/paper.png', cv2.IMREAD_COLOR)
-        coImgs[rps.PAPER] = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        coImgs[utils.PAPER] = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img = cv2.imread('img/gui/scissors.png',
                          cv2.IMREAD_COLOR)
-        coImgs[rps.SCISSORS] = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        coImgs[utils.SCISSORS] = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
         # Load green image
         greenImg = cv2.imread('img/gui/green.png', cv2.IMREAD_COLOR)
@@ -145,13 +145,13 @@ if __name__ == '__main__':
                     successive = 0
 
                 if successive == 2:
-                    print('Player: {}'.format(rps.gestureTxt[predGesture]))
+                    print('Player: {}'.format(utils.gestureTxt[predGesture]))
                     waitTime = 3000
                     gesture = predGesture
 
                     # Computer gesture
                     computerGesture = random.randint(0,2)
-                    print('Computer: {}'.format(rps.gestureTxt[computerGesture]))
+                    print('Computer: {}'.format(utils.gestureTxt[computerGesture]))
 
                     # Set computer image to computer gesture
                     gui.setCoImg(coImgs[computerGesture])
